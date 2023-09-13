@@ -39,7 +39,7 @@ const sessionsUsers = async (req, res) => {
 		const user = await knex("users").where("email", email).first();
 
 		if(!user){
-			return res.status(203).json({message: "Usuário não encontrado"});
+			return res.status(204).json({message: "Usuário não encontrado"});
 		}
 
 		const passwordPassed = await compare(password, user.password);
