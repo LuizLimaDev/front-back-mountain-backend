@@ -1,10 +1,10 @@
 const joi = require("joi");
 
 const userSchema = joi.object({
-	username: joi.string().min(3).required().messages({
-		"any.required": "O campo username é obrigatório",
-		"string.empty": "O campo username é obrigatório",
-		"string.min": "O campo username precisa ter no mínimo 3 caracteres.",
+	name: joi.string().min(3).required().messages({
+		"any.required": "O campo nome é obrigatório",
+		"string.empty": "O campo nome é obrigatório",
+		"string.min": "O campo nome precisa ter no mínimo 3 caracteres.",
 	}),
 	email: joi.string().email({tlds: { allow: ["com"] }}).required().messages({
 		"string.email": "O campo email precisa ter um formato válido",
