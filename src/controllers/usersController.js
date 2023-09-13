@@ -78,8 +78,43 @@ const profileUsers = async (req, res) => {
 	
 };
 
+const editUsers = async (req, res) => {
+	try {
+		const { id } = req.user;
+		const { name, email, newPassword, phone, cpf } = req.body;
+
+		let user = await knex("users").where("id", id).first();
+
+		if(!user){
+			return res.status(204).json({message: "Usuário não encontrado"});
+		}
+
+		const emailAlreadyExists = await knex("users").where("email", email).first();
+
+		if(emailAlreadyExists && emailAlreadyExists.id !== user.id){
+			res.status(400).json({message: "Nao pode mudar email, uma conta com esse email ja existe"});
+		}
+
+		user.name = name ?? user.name;
+		user.email = email ?? user.email;
+		user.phone = phone ?? user.phone;
+		user.cpf = cpf ?? user.cpf;
+
+		if(newPassword){
+			user.password = await hash(newPassword, 8);
+		}
+
+		await knex("users").update(user).where("id", id); 
+
+		return res.status(200).json({...user});
+	} catch (error) {
+		return res.status(500).json({message: "Internal Server Error"});	
+	}
+};
+
 module.exports = {
 	createUsers,
 	sessionsUsers,
-	profileUsers
+	profileUsers,
+	editUsers
 };
