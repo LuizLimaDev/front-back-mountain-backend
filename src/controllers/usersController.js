@@ -4,7 +4,7 @@ const { expiresIn, secret } = require("../env/envs.js");
 const { sign } = require("jsonwebtoken");
 
 const createUsers = async (req, res) => {
-	const { username, email, password } = req.body;
+	const { name, email, password } = req.body;
 
 	try {
 		
@@ -17,7 +17,7 @@ const createUsers = async (req, res) => {
 		const passwordHashed = await hash(password, 10);
 
 		await knex("users").insert({
-			username,
+			name,
 			email,
 			password: passwordHashed,
 		});
@@ -61,7 +61,25 @@ const sessionsUsers = async (req, res) => {
 	}
 };
 
+const profileUsers = async (req, res) => {
+	const { id } = req.user;
+	
+	try {
+		const user = await knex("users").select("name", "email").where("id", id).first();
+
+		if(!user){
+			return res.status(204).json({message: "Usuário não encontrado"});
+		}
+
+		return res.status(200).json({...user});
+	} catch (error) {
+		return res.status(500).json({message: "Internal Server Error"});	
+	}
+	
+};
+
 module.exports = {
 	createUsers,
 	sessionsUsers,
+	profileUsers
 };
