@@ -1,11 +1,13 @@
 const { Router } = require("express");
-const { validateRequestBody } = require("../middlewares/validatorCreateUser");
-const { userSchema } = require("../schemas/userSchema");
 const usersRoutes = Router();
+const { validateRequestBody } = require("../middlewares/validatorCreateUser");
+const { userSchema, sessionsUserSchema } = require("../schemas/userSchema");
 
-usersRoutes.post("/", validateRequestBody(userSchema));
+const { createUsers, sessionsUsers } = require("../controllers/usersController");
+
+usersRoutes.post("/", validateRequestBody(userSchema), createUsers);
 usersRoutes.put("/");
-usersRoutes.get("/sessions");
+usersRoutes.post("/sessions", validateRequestBody(sessionsUserSchema), sessionsUsers);
 usersRoutes.get("/profile");
 
 module.exports = {
