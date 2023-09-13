@@ -7,5 +7,5 @@ usersRoutes.get("/sessions");
 usersRoutes.get("/profile");
 
 module.exports = {
-    usersRoutes,
+	usersRoutes,
 };
