@@ -11,4 +11,6 @@ app.use(routes);
 
 const port = process.env.PORT || 3300;
 
-app.listen(port);
+app.listen(port, async ()=>{
+	console.log(`Api running at port ${process.env.PORT}`);
+});
