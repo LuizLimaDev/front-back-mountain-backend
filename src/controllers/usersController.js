@@ -40,7 +40,7 @@ const sessionsUsers = async (req, res) => {
 		const user = await knex("users").where("email", email).first();
 
 		if(!user){
-			return res.status(204).json({message: "Usuário não encontrado"});
+			return res.status(404).json({message: "Usuário não encontrado"});
 		}
 
 		const passwordPassed = await compare(password, user.password);
@@ -70,7 +70,7 @@ const profileUsers = async (req, res) => {
 		const user = await knex("users").select("name", "email").where("id", id).first();
 
 		if(!user){
-			return res.status(204).json({message: "Usuário não encontrado"});
+			return res.status(404).json({message: "Usuário não encontrado"});
 		}
 
 		return res.status(200).json({...user});
@@ -109,7 +109,7 @@ const editUsers = async (req, res) => {
 
 		await knex("users").update(user).where("id", id); 
 
-		return res.status(200).json({...user});
+		return res.status(204);
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({message: "Internal Server Error"});	
