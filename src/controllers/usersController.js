@@ -26,6 +26,7 @@ const createUsers = async (req, res) => {
 			.status(200)
 			.json({ message: "Usuário criado com sucesso" });
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({message: "Internal Server Error"});
 	}
 
@@ -57,6 +58,7 @@ const sessionsUsers = async (req, res) => {
 			.status(200)
 			.json({ token });
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({message: "Internal Server Error"});
 	}
 };
@@ -73,6 +75,7 @@ const profileUsers = async (req, res) => {
 
 		return res.status(200).json({...user});
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({message: "Internal Server Error"});	
 	}
 	
@@ -108,6 +111,7 @@ const editUsers = async (req, res) => {
 
 		return res.status(200).json({...user});
 	} catch (error) {
+		console.log(error);
 		return res.status(500).json({message: "Internal Server Error"});	
 	}
 };
