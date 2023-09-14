@@ -46,17 +46,17 @@ const listChargesMetrics = async (req, res) => {
 		return res.status(201).json({
 			paid: {
 				paidTotal: paidTotalPrice,
-				paidCount: paidTotalCount,
+				paidCount: Number(paidTotalCount),
 				paidList,
 			},
 			planned: {
 				plannedTotal: plannedTotalPrice,
-				plannedCount: plannedTotalCount,
+				plannedCount: Number(plannedTotalCount),
 				plannedList
 			},
 			overdue: {
 				overdueTotal: overdueTotalPrice,
-				overdueCount: overdueTotalCount,
+				overdueCount: Number(overdueTotalCount),
 				overdueList
 			}
 			
