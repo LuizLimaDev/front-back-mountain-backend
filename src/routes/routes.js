@@ -14,6 +14,7 @@ const {
 	validateRequestParams,
 } = require("../middlewares/validateRequestParams");
 const { validateEmail } = require("../schemas/userSchema");
+const chargesRoutes = require("./charges.routes");
 
 routes.get("/", apiHealth);
 routes.use("/customers", ensureAuthenticated, customersRoutes);
@@ -25,5 +26,6 @@ routes.get(
 );
 
 routes.use("/users", usersRoutes);
+routes.use("/charges", ensureAuthenticated, chargesRoutes);
 
 module.exports = routes;
