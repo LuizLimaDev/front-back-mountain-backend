@@ -9,7 +9,7 @@ const customerSchema = joi.object({
 
 	email: joi
 		.string()
-		.email({ inDomainSegments: 2, tlds: { allow: ["com"] } })
+		.email({ tlds: { allow: ["com"] } })
 		.required()
 		.messages({
 			"string.email": "O campo email precisa ter um formato válido",
@@ -19,23 +19,16 @@ const customerSchema = joi.object({
 
 	cpf: joi
 		.string()
-		.min(11)
-		.max(11)
 		.pattern(/^\d{3}.\d{3}.\d{3}-\d{2}$/)
 		.message("O CPF deve estar no formato XXX.XXX.XXX-XX"),
 
-	phone: joi
-		.string()
-		.pattern(/^(\d{2}) \d{4,5}-\d{4}$/)
-		.message(
-			"O número de telefone com DDD deve estar no formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX"
-		),
+	phone: joi.string(),
 
-	cep: joi.string().min(8).max(8),
+	zipcode: joi.string().min(8).max(8),
 
-	address: joi.string(),
+	street: joi.string(),
 
-	addressNumber: joi.string(),
+	complement: joi.string(),
 
 	neighborhood: joi.string(),
 
