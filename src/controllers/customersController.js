@@ -2,6 +2,7 @@ const knex = require("../database/knex");
 
 const listCustomers = async (req, res) => {
 	try {
+		await knex("charges").where("duedate", "<", knex.fn.now()).update({status: "vencido"});
 		const customers = await knex("customers")
 			.distinct("customers.id", "customers.*", "status")
 			.leftJoin("charges", "customers.id", "=", function () {
@@ -33,6 +34,7 @@ const createCustomers = async (req, res) => {
 	} = req.body;
 
 	try {
+		await knex("charges").where("duedate", "<", knex.fn.now()).update({status: "vencido"});
 		const emailExists = await knex("customers").where({ email }).first();
 
 		if (emailExists) {
@@ -68,6 +70,7 @@ const createCustomers = async (req, res) => {
 
 const listCustomersMetrics = async (req, res) => {
 	try {
+		await knex("charges").where("duedate", "<", knex.fn.now()).update({status: "vencido"});
 		const paymentsOnTotal = await knex("customers")
 			.leftJoin("charges", "customers.id", "=", function () {
 				this.select("id")
