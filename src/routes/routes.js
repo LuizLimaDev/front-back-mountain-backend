@@ -10,11 +10,19 @@ const {
 routes.get("/", verifyTheEnvironmentVariables);
 const { usersRoutes } = require("./users.routes");
 const ensureAuthenticated = require("../middlewares/ensureAuthenticated");
+const {
+	validateRequestParams,
+} = require("../middlewares/validateRequestParams");
+const { validateEmail } = require("../schemas/userSchema");
 
 routes.get("/", apiHealth);
 routes.use("/customers", ensureAuthenticated, customersRoutes);
 
-routes.get("/email/:email", emailController);
+routes.get(
+	"/email/:email",
+	validateRequestParams(validateEmail),
+	emailController
+);
 
 routes.use("/users", usersRoutes);
 
