@@ -19,10 +19,14 @@ const customerSchema = joi.object({
 
 	cpf: joi
 		.string()
+		.required()
 		.pattern(/^\d{3}.\d{3}.\d{3}-\d{2}$/)
 		.message("O CPF deve estar no formato XXX.XXX.XXX-XX"),
 
-	phone: joi.string(),
+	phone: joi.string().required().messages({
+		"any.required": "O campo telefone é obrigatório",
+		"string.empty": "O campo telefone é obrigatório",
+	}),
 
 	zipcode: joi.string().min(8).max(8),
 

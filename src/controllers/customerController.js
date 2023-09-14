@@ -68,7 +68,7 @@ const createCustomer = async (req, res) => {
 
 const listCustomerMetrics = async (req, res) => {
 	try {
-		const customersEmDia = await knex("customers")
+		const paymentsOnTotal = await knex("customers")
 			.leftJoin("charges", "customers.id", "=", function () {
 				this.select("id")
 					.from("charges")
@@ -82,7 +82,7 @@ const listCustomerMetrics = async (req, res) => {
 			.countDistinct("customers.id as total")
 			.first();
 
-		const customersPendentesVencidos = await knex("customers")
+		const defaultersTotal = await knex("customers")
 			.leftJoin("charges", "customers.id", "=", function () {
 				this.select("id")
 					.from("charges")
@@ -96,7 +96,7 @@ const listCustomerMetrics = async (req, res) => {
 			.countDistinct("customers.id as total")
 			.first();
 
-		const listCustomersEmDia = await knex("customers")
+		const listPaymentsOnTotal = await knex("customers")
 			.distinct("customers.id", "customers.*", "status")
 			.leftJoin("charges", "customers.id", "=", function () {
 				this.select("id")
@@ -109,7 +109,7 @@ const listCustomerMetrics = async (req, res) => {
 				builder.whereIn("status", ["pago"]).orWhereNull("status");
 			});
 
-		const listCustomersPendentesVencidos = await knex("customers")
+		const listDefaultersTotal = await knex("customers")
 			.distinct("customers.id", "customers.*", "status")
 			.leftJoin("charges", "customers.id", "=", function () {
 				this.select("id")
@@ -123,10 +123,10 @@ const listCustomerMetrics = async (req, res) => {
 			});
 
 		return res.status(200).json({
-			customersEmDia,
-			customersPendentesVencidos,
-			listCustomersEmDia,
-			listCustomersPendentesVencidos,
+			paymentsOnTotal,
+			defaultersTotal,
+			listPaymentsOnTotal,
+			listDefaultersTotal,
 		});
 	} catch (error) {
 		return res.status(400).json({ mensagem: error.message });
