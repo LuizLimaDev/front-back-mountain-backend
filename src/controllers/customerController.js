@@ -36,7 +36,7 @@ const createCustomer = async (req, res) => {
 		const emailExists = await knex("customers").where({ email }).first();
 
 		if (emailExists) {
-			return res.status(400).json({ message: "O e-mail já existe." });
+			return res.status(203).json({ message: "O e-mail já existe." });
 		}
 
 		const customer = await knex("customers")

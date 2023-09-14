@@ -1,7 +1,7 @@
-require("dotenv").config();
 const express = require("express");
 const routes = require("./routes/routes");
 const cors = require("cors");
+const { port } = require("./env/envs");
 
 const app = express();
 
@@ -9,6 +9,6 @@ app.use(express.json());
 app.use(cors());
 app.use(routes);
 
-const port = process.env.PORT || 3300;
-
-app.listen(port);
+app.listen(port, async () => {
+	console.log(`Api running at port ${process.env.PORT}`);
+});
