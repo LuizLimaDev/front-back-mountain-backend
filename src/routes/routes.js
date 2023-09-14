@@ -5,7 +5,7 @@ const customersRoutes = require("./customers.routes");
 const emailController = require("../controllers/emailController");
 const {
 	verifyTheEnvironmentVariables,
-} = require("../middlewares/verifyTheEnvironmentVariables");
+} = require("../middlewares/VerifyTheEnvironmentVariables");
 
 routes.get("/", verifyTheEnvironmentVariables);
 const { usersRoutes } = require("./users.routes");
