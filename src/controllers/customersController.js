@@ -18,7 +18,7 @@ const listCustomers = async (req, res) => {
 	}
 };
 
-const createCustomer = async (req, res) => {
+const createCustomers = async (req, res) => {
 	const {
 		name,
 		email,
@@ -66,7 +66,7 @@ const createCustomer = async (req, res) => {
 	}
 };
 
-const listCustomerMetrics = async (req, res) => {
+const listCustomersMetrics = async (req, res) => {
 	try {
 		const paymentsOnTotal = await knex("customers")
 			.leftJoin("charges", "customers.id", "=", function () {
@@ -96,7 +96,7 @@ const listCustomerMetrics = async (req, res) => {
 			.countDistinct("customers.id as total")
 			.first();
 
-		const listPaymentsOnTotal = await knex("customers")
+		const listPaymentsOn = await knex("customers")
 			.distinct("customers.id", "customers.*", "status")
 			.leftJoin("charges", "customers.id", "=", function () {
 				this.select("id")
@@ -109,7 +109,7 @@ const listCustomerMetrics = async (req, res) => {
 				builder.whereIn("status", ["pago"]).orWhereNull("status");
 			});
 
-		const listDefaultersTotal = await knex("customers")
+		const listDefaulters = await knex("customers")
 			.distinct("customers.id", "customers.*", "status")
 			.leftJoin("charges", "customers.id", "=", function () {
 				this.select("id")
@@ -123,10 +123,14 @@ const listCustomerMetrics = async (req, res) => {
 			});
 
 		return res.status(200).json({
-			paymentsOnTotal,
-			defaultersTotal,
-			listPaymentsOnTotal,
-			listDefaultersTotal,
+			paymentsOn: {
+				paymentsOnTotal,
+				paymentsOnList: listPaymentsOn
+			},
+			defaulters: {
+				defaultersTotal,
+				defaultersList: listDefaulters
+			}
 		});
 	} catch (error) {
 		return res.status(400).json({ mensagem: error.message });
@@ -135,6 +139,6 @@ const listCustomerMetrics = async (req, res) => {
 
 module.exports = {
 	listCustomers,
-	createCustomer,
-	listCustomerMetrics,
+	createCustomers,
+	listCustomersMetrics,
 };

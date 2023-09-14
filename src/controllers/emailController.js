@@ -2,16 +2,18 @@ const knex = require("../database/knex");
 
 const emailController = async (req, res) => {
 	try {
-		const emailCustomers = await knex("customers").select("email");
 		const requestedEmail = req.params.email;
-		const emailFound = emailCustomers.find(
-			(customer) => customer.email === requestedEmail
-		);
+		const emailUsers = await knex("users")
+			.where("email", requestedEmail)
+			.first();
 
-		if (emailFound) {
-			return res.status(200).json(emailFound);
+		if (emailUsers) {
+			return res.status(401).json({ message: "O e-mail já existe" });
 		}
-		return res.status(400).json({ message: "E-mail não existe" });
+
+		return res
+			.status(200)
+			.json({ message: "E-mail disponível para ser usado" });
 	} catch (error) {
 		return res.status(400).json({ message: error.message });
 	}

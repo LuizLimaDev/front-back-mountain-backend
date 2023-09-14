@@ -9,6 +9,6 @@ app.use(express.json());
 app.use(cors());
 app.use(routes);
 
-app.listen(port, async () => {
+app.listen(port, async ()=>{
 	console.log(`Api running at port ${process.env.PORT}`);
 });

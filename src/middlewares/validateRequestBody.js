@@ -1,4 +1,4 @@
-const validatorCreateCustomer = (joiSchema) => async (req, res, next) => {
+const validateRequestBody = joiSchema => async (req, res, next) => {
 	try {
 		await joiSchema.validateAsync(req.body);
 		next();
@@ -7,4 +7,6 @@ const validatorCreateCustomer = (joiSchema) => async (req, res, next) => {
 	}
 };
 
-module.exports = validatorCreateCustomer;
+module.exports = {
+	validateRequestBody
+};
