@@ -28,7 +28,10 @@ const customersSchema = joi.object({
 		"string.empty": "O campo telefone é obrigatório",
 	}),
 
-	zipcode: joi.string().min(8).max(8),
+	zipcode: joi.string().min(8).max(8).messages({
+		"string.min": "O tamanho do CEP deve ser de 8 caracteres.",
+		"string.max": "O tamanho do CEP deve ser de 8 caracteres.",
+	}),
 
 	street: joi.string(),
 
