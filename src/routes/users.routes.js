@@ -108,7 +108,7 @@ usersRoutes.put(
  *                 type: string
  *                 example: test@test.com
  *     responses:
- *       201:
+ *       200:
  *         description: Objeto com o token de autenticação.
  *         content:
  *           application/json:
@@ -181,6 +181,33 @@ usersRoutes.post(
 	validateRequestBody(sessionsUserSchema),
 	sessionsUsers
 );
+
+/**
+ * @swagger
+ * /users/profile:
+ *   get:
+ *     summary: Rota para mostrar dados de usuário.
+ *     tags:
+ *       - users
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Objeto com dados do perfil de usuário.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 email:
+ *                   type: string
+ *                   example: test@test.com
+ *                 name:
+ *                   type: string
+ *                   example: test@test.com
+ */
+
+
 usersRoutes.get("/profile", ensureAuthenticated, profileUsers);
 
 module.exports = {
