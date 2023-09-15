@@ -46,7 +46,7 @@ const sessionsUsers = async (req, res) => {
 		const passwordPassed = await compare(password, user.password);
 
 		if(!passwordPassed){
-			return res.status(203).json({message: "Senha invalida"});
+			return res.status(403).json({message: "Senha inválida"});
 		}
 
 		const token = sign({}, secret, {
