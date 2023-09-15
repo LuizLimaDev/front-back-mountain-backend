@@ -22,13 +22,13 @@ const chargesSchema = joi.object({
 	status: joi.string().valid("pago", "pendente").required().messages({
 		"string.empty": "O campo status é obrigatório",
 		"any.required": "O campo status é obrigatório",
-		"any.valid": "O campo status precisa ser do tipo pago ou pendente",
+		"any.only": "O campo status precisa ser do tipo pago ou pendente",
 	}),
 	value: joi.number().positive().required().messages({
 		"number.empty": "O campo status é obrigatório",
 		"any.required": "O campo status é obrigatório",
 		"any.positive": "O campo de valor precisar ser positivo",
-	})
+	}),
 });
 
 module.exports = { chargesSchema };
