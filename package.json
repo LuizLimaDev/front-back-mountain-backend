@@ -1,12 +1,12 @@
 {
-	"name": "front-back-montain-backend",
+	"name": "front-back-mountain-backend",
 	"version": "1.0.0",
-	"description": "",
+	"description": "Sem calote",
 	"main": "index.js",
 	"scripts": {
 		"dev": "nodemon ./src/index.js",
 		"start": "node ./src/index",
-		"lint": "eslint src --report-unused-disable-directives --max-warnings 0 --fix"
+		"lint": "eslint ./src --report-unused-disable-directives --max-warnings 0 --fix"
 	},
 	"keywords": [],
 	"author": "",
