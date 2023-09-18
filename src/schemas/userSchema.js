@@ -45,7 +45,7 @@ const sessionsUserSchema = joi.object({
 	password: joi.string().min(8).max(32).required().messages({
 		"any.required": "O campo senha é obrigatório",
 		"string.empty": "O campo senha é obrigatório",
-		"string.min": "A senha precisa conter, no mínimo, 5 caracteres",
+		"string.min": "A senha precisa conter, no mínimo, 8 caracteres",
 		"string.max": "A senha precisa conter, no máximo, 32 caracteres",
 	}),
 });
@@ -59,7 +59,7 @@ const editUsersSchema = joi.object({
 	email,
 
 	newPassword: joi.string().min(8).max(32).messages({
-		"string.min": "A senha precisa conter, no mínimo, 5 caracteres",
+		"string.min": "A senha precisa conter, no mínimo, 8 caracteres",
 		"string.max": "A senha precisa conter, no máximo, 32 caracteres",
 	}),
 	cpf: joi
