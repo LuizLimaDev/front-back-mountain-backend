@@ -2,7 +2,10 @@ const knex = require("../database/knex");
 
 const listCustomers = async (req, res) => {
 	try {
-		await knex("charges").where("duedate", "<", knex.fn.now()).andWhere("status","pendente").update({status: "vencido"});
+		await knex("charges")
+			.where("duedate", "<", knex.fn.now())
+			.andWhere("status", "pendente")
+			.update({ status: "vencido" });
 		const customers = await knex("customers")
 			.distinct("customers.id", "customers.*", "status")
 			.leftJoin("charges", "customers.id", "=", function () {
@@ -34,7 +37,10 @@ const createCustomers = async (req, res) => {
 	} = req.body;
 
 	try {
-		await knex("charges").where("duedate", "<", knex.fn.now()).andWhere("status","pendente").update({status: "vencido"});
+		await knex("charges")
+			.where("duedate", "<", knex.fn.now())
+			.andWhere("status", "pendente")
+			.update({ status: "vencido" });
 		const emailExists = await knex("customers").where({ email }).first();
 
 		if (emailExists) {
@@ -70,7 +76,10 @@ const createCustomers = async (req, res) => {
 
 const listCustomersMetrics = async (req, res) => {
 	try {
-		await knex("charges").where("duedate", "<", knex.fn.now()).andWhere("status","pendente").update({status: "vencido"});
+		await knex("charges")
+			.where("duedate", "<", knex.fn.now())
+			.andWhere("status", "pendente")
+			.update({ status: "vencido" });
 		const paymentsOnTotal = await knex("customers")
 			.leftJoin("charges", "customers.id", "=", function () {
 				this.select("id")
@@ -86,13 +95,7 @@ const listCustomersMetrics = async (req, res) => {
 			.first();
 
 		const defaultersTotal = await knex("customers")
-			.leftJoin("charges", "customers.id", "=", function () {
-				this.select("id")
-					.from("charges")
-					.whereRaw("charges.customerid = customers.id")
-					.orderBy("id", "asc")
-					.limit(1);
-			})
+			.leftJoin("charges", "customers.id", "=", "charges.customerid")
 			.where((builder) => {
 				builder.whereIn("status", ["pendente", "vencido"]);
 			})
@@ -128,12 +131,12 @@ const listCustomersMetrics = async (req, res) => {
 		return res.status(200).json({
 			paymentsOn: {
 				paymentsOnTotal,
-				paymentsOnList: listPaymentsOn
+				paymentsOnList: listPaymentsOn,
 			},
 			defaulters: {
 				defaultersTotal,
-				defaultersList: listDefaulters
-			}
+				defaultersList: listDefaulters,
+			},
 		});
 	} catch (error) {
 		return res.status(400).json({ mensagem: error.message });
