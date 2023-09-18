@@ -1,3 +1,4 @@
+require("dotenv").config();
 const knex = require("../database/knex");
 
 const listCustomers = async (req, res) => {
@@ -6,7 +7,7 @@ const listCustomers = async (req, res) => {
 			.where("duedate", "<", knex.fn.now())
 			.andWhere("status", "pendente")
 			.update({ status: "vencido" });
-		const customers = await knex("customers")
+		const listPaymentsOn = await knex("customers")
 			.distinct("customers.id", "customers.*", "status")
 			.leftJoin("charges", "customers.id", "=", function () {
 				this.select("id")
@@ -14,11 +15,32 @@ const listCustomers = async (req, res) => {
 					.whereRaw("charges.customerid = customers.id")
 					.orderBy("id", "asc")
 					.limit(1);
+			})
+			.whereNotExists(function () {
+				this.select("*")
+					.from("charges")
+					.whereRaw("customers.id = charges.customerId")
+					.whereIn("charges.status", ["pendente", "vencido"]);
+			})
+			.where((builder) => {
+				builder.whereIn("status", ["pago"]).orWhereNull("status");
 			});
 
-		return res.json(customers);
+		const listDefaulters = await knex("customers")
+			.modify(function (queryBuilder) {
+				if (process.env.NODE_ENV === "production") {
+					queryBuilder.distinctOn("customers.id");
+				} else {
+					queryBuilder.groupBy("customers.id");
+				}
+			})
+			.select("customers.*", "charges.status")
+			.leftJoin("charges", "customers.id", "=", "charges.customerid")
+			.whereIn("status", ["pendente", "vencido"]);
+
+		return res.json({ customers: [...listPaymentsOn, ...listDefaulters] });
 	} catch (error) {
-		console.log(error);
+		return res.status(500).json({ mensagem: error.message });
 	}
 };
 
@@ -70,7 +92,7 @@ const createCustomers = async (req, res) => {
 
 		return res.status(201).json(customer[0]);
 	} catch (error) {
-		return res.status(400).json({ mensagem: error.message });
+		return res.status(500).json({ mensagem: error.message });
 	}
 };
 
@@ -88,16 +110,14 @@ const listCustomersMetrics = async (req, res) => {
 					.orderBy("id", "asc")
 					.limit(1);
 			})
+			.whereNotExists(function () {
+				this.select("*")
+					.from("charges")
+					.whereRaw("customers.id = charges.customerId")
+					.whereIn("charges.status", ["pendente", "vencido"]);
+			})
 			.where((builder) => {
 				builder.whereIn("status", ["pago"]).orWhereNull("status");
-			})
-			.countDistinct("customers.id as total")
-			.first();
-
-		const defaultersTotal = await knex("customers")
-			.leftJoin("charges", "customers.id", "=", "charges.customerid")
-			.where((builder) => {
-				builder.whereIn("status", ["pendente", "vencido"]);
 			})
 			.countDistinct("customers.id as total")
 			.first();
@@ -111,12 +131,17 @@ const listCustomersMetrics = async (req, res) => {
 					.orderBy("id", "asc")
 					.limit(1);
 			})
+			.whereNotExists(function () {
+				this.select("*")
+					.from("charges")
+					.whereRaw("customers.id = charges.customerId")
+					.whereIn("charges.status", ["pendente", "vencido"]);
+			})
 			.where((builder) => {
 				builder.whereIn("status", ["pago"]).orWhereNull("status");
 			});
 
-		const listDefaulters = await knex("customers")
-			.distinct("customers.id", "customers.*", "status")
+		const defaultersTotal = await knex("customers")
 			.leftJoin("charges", "customers.id", "=", function () {
 				this.select("id")
 					.from("charges")
@@ -126,7 +151,21 @@ const listCustomersMetrics = async (req, res) => {
 			})
 			.where((builder) => {
 				builder.whereIn("status", ["pendente", "vencido"]);
-			});
+			})
+			.countDistinct("customers.id as total")
+			.first();
+
+		const listDefaulters = await knex("customers")
+			.modify(function (queryBuilder) {
+				if (process.env.NODE_ENV === "production") {
+					queryBuilder.distinctOn("customers.id");
+				} else {
+					queryBuilder.groupBy("customers.id");
+				}
+			})
+			.select("customers.*", "charges.status")
+			.leftJoin("charges", "customers.id", "=", "charges.customerid")
+			.whereIn("status", ["pendente", "vencido"]);
 
 		return res.status(200).json({
 			paymentsOn: {
