@@ -2,7 +2,7 @@ const knex = require("../database/knex");
 
 const listChargesMetrics = async (req, res) => {
 	try {
-		await knex("charges").where("duedate::date", "<", knex.fn.now()).andWhere("status","pendente").update({status: "vencido"});
+		await knex("charges").where("duedate", "<", knex.fn.now()).andWhere("status","pendente").update({status: "vencido"});
 
 		const { paidTotalPrice } = await knex("customers")
 			.rightJoin("charges", "customers.id", "=","charges.customerid")
