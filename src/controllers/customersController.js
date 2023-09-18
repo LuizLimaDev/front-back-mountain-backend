@@ -4,7 +4,7 @@ const knex = require("../database/knex");
 
 const listCustomers = async (req, res) => {
 	try {
-		await knex("charges").where("CAST(duedate AS date", "<", knex.fn.now()).andWhere("status","pendente").update({status: "vencido"});
+		await knex("charges").where("duedate", "<", knex.fn.now()).andWhere("status","pendente").update({status: "vencido"});
 		const listPaymentsOn = await knex("customers")
 			.distinct("customers.id", "customers.*", "status")
 			.leftJoin("charges", "customers.id", "=", function () {
