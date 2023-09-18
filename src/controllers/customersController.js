@@ -29,14 +29,14 @@ const listCustomers = async (req, res) => {
 		const listDefaulters = await knex("customers")
 			.modify(function(queryBuilder) {
 				if (process.env.NODE_ENV === "production") {
-				queryBuilder.distinctOn("customers.id");
+					queryBuilder.distinctOn("customers.id");
 				} else {
-				queryBuilder.groupBy("customers.id");
+					queryBuilder.groupBy("customers.id");
 				}
 			})
 			.select("customers.*", "charges.status")
 			.leftJoin("charges", "customers.id", "=", "charges.customerid")
-			.whereIn("status", ["pendente", "vencido"])
+			.whereIn("status", ["pendente", "vencido"]);
 
 		return res.json({customers:[...listPaymentsOn, ...listDefaulters]});
 	} catch (error) {
@@ -118,7 +118,7 @@ const listCustomersMetrics = async (req, res) => {
 			.countDistinct("customers.id as total")
 			.first();
 		
-			const listPaymentsOn = await knex("customers")
+		const listPaymentsOn = await knex("customers")
 			.distinct("customers.id", "customers.*", "status")
 			.leftJoin("charges", "customers.id", "=", function () {
 				this.select("id")
@@ -157,14 +157,14 @@ const listCustomersMetrics = async (req, res) => {
 		const listDefaulters = await knex("customers")
 			.modify(function(queryBuilder) {
 				if (process.env.NODE_ENV === "production") {
-				queryBuilder.distinctOn("customers.id");
+					queryBuilder.distinctOn("customers.id");
 				} else {
-				queryBuilder.groupBy("customers.id");
+					queryBuilder.groupBy("customers.id");
 				}
 			})
 			.select("customers.*", "charges.status")
 			.leftJoin("charges", "customers.id", "=", "charges.customerid")
-			.whereIn("status", ["pendente", "vencido"])
+			.whereIn("status", ["pendente", "vencido"]);
 
 		return res.status(200).json({
 			paymentsOn: {
