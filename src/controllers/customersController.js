@@ -142,16 +142,8 @@ const listCustomersMetrics = async (req, res) => {
 			});
 
 		const defaultersTotal = await knex("customers")
-			.leftJoin("charges", "customers.id", "=", function () {
-				this.select("id")
-					.from("charges")
-					.whereRaw("charges.customerid = customers.id")
-					.orderBy("id", "asc")
-					.limit(1);
-			})
-			.where((builder) => {
-				builder.whereIn("status", ["pendente", "vencido"]);
-			})
+			.leftJoin("charges", "customers.id", "=", "charges.customerid")
+			.whereIn("status", ["pendente", "vencido"])
 			.countDistinct("customers.id as total")
 			.first();
 
