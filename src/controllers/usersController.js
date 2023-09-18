@@ -7,11 +7,12 @@ const createUsers = async (req, res) => {
 	const { name, email, password } = req.body;
 
 	try {
-		
 		const user = await knex("users").where("email", email).first();
 
-		if(user){
-			return res.status(203).json({message: "Ja existe um usuário com esse email"});
+		if (user) {
+			return res
+				.status(203)
+				.json({ message: "Ja existe um usuário com esse email" });
 		}
 
 		const passwordHashed = await hash(password, 10);
@@ -22,63 +23,59 @@ const createUsers = async (req, res) => {
 			password: passwordHashed,
 		});
 
-		return res
-			.status(200)
-			.json({ message: "Usuário criado com sucesso" });
+		return res.status(200).json({ message: "Usuário criado com sucesso" });
 	} catch (error) {
 		console.log(error);
-		return res.status(500).json({message: "Internal Server Error"});
+		return res.status(500).json({ message: "Internal Server Error" });
 	}
-
 };
 
 const sessionsUsers = async (req, res) => {
 	const { email, password } = req.body;
 
 	try {
-		
 		const user = await knex("users").where("email", email).first();
 
-		if(!user){
-			return res.status(404).json({message: "Usuário não encontrado"});
+		if (!user) {
+			return res.status(404).json({ message: "Usuário não encontrado" });
 		}
 
 		const passwordPassed = await compare(password, user.password);
 
-		if(!passwordPassed){
-			return res.status(403).json({message: "Senha inválida"});
+		if (!passwordPassed) {
+			return res.status(403).json({ message: "Senha inválida" });
 		}
 
 		const token = sign({}, secret, {
 			subject: String(user.id),
-			expiresIn
+			expiresIn,
 		});
 
-		return res
-			.status(200)
-			.json({ token });
+		return res.status(200).json({ token });
 	} catch (error) {
 		console.log(error);
-		return res.status(500).json({message: "Internal Server Error"});
+		return res.status(500).json({ message: "Internal Server Error" });
 	}
 };
 
 const profileUsers = async (req, res) => {
 	const { id } = req.user;
-	
-	try {
-		const user = await knex("users").select("name", "email").where("id", id).first();
 
-		if(!user){
-			return res.status(404).json({message: "Usuário não encontrado"});
+	try {
+		const user = await knex("users")
+			.select("name", "email")
+			.where("id", id)
+			.first();
+
+		if (!user) {
+			return res.status(404).json({ message: "Usuário não encontrado" });
 		}
 
-		return res.status(200).json({...user});
+		return res.status(200).json({ ...user });
 	} catch (error) {
 		console.log(error);
-		return res.status(500).json({message: "Internal Server Error"});	
+		return res.status(500).json({ message: "Internal Server Error" });
 	}
-	
 };
 
 const editUsers = async (req, res) => {
@@ -88,14 +85,19 @@ const editUsers = async (req, res) => {
 
 		let user = await knex("users").where("id", id).first();
 
-		if(!user){
-			return res.status(204).json({message: "Usuário não encontrado"});
+		if (!user) {
+			return res.status(204).json({ message: "Usuário não encontrado" });
 		}
 
-		const emailAlreadyExists = await knex("users").where("email", email).first();
+		const emailAlreadyExists = await knex("users")
+			.where("email", email)
+			.first();
 
-		if(emailAlreadyExists && emailAlreadyExists.id !== user.id){
-			res.status(400).json({message: "Nao pode mudar email, uma conta com esse email ja existe"});
+		if (emailAlreadyExists && emailAlreadyExists.id !== user.id) {
+			res.status(400).json({
+				message:
+					"Nao pode mudar email, uma conta com esse email ja existe",
+			});
 		}
 
 		user.name = name ?? user.name;
@@ -103,16 +105,24 @@ const editUsers = async (req, res) => {
 		user.phone = phone ?? user.phone;
 		user.cpf = cpf ?? user.cpf;
 
-		if(newPassword){
+		if (newPassword) {
 			user.password = await hash(newPassword, 8);
 		}
 
-		await knex("users").update(user).where("id", id); 
+		await knex("users")
+			.update({
+				name: user.name,
+				email: user.email,
+				phone: user.phone,
+				cpf: user.cpf,
+				password: user.password,
+			})
+			.where("id", id);
 
-		return res.status(204);
+		return res.status(204).json("ok");
 	} catch (error) {
 		console.log(error);
-		return res.status(500).json({message: "Internal Server Error"});	
+		return res.status(500).json({ message: "Internal Server Error" });
 	}
 };
 
@@ -120,5 +130,5 @@ module.exports = {
 	createUsers,
 	sessionsUsers,
 	profileUsers,
-	editUsers
+	editUsers,
 };
