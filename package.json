@@ -1,7 +1,7 @@
 {
 	"name": "front-back-montain-backend",
 	"version": "1.0.0",
-	"description": "",
+	"description": "Sem calote",
 	"main": "index.js",
 	"scripts": {
 		"dev": "nodemon ./src/index.js",
