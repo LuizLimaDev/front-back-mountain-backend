@@ -28,20 +28,20 @@ const customersSchema = joi.object({
 		"string.empty": "O campo telefone é obrigatório",
 	}),
 
-	zipcode: joi.string().min(8).max(8).messages({
+	zipcode: joi.string().min(8).max(8).allow(null, "").messages({
 		"string.min": "O tamanho do CEP deve ser de 8 caracteres.",
 		"string.max": "O tamanho do CEP deve ser de 8 caracteres.",
 	}),
 
-	street: joi.string(),
+	street: joi.string().allow(null, ""),
 
-	complement: joi.string(),
+	complement: joi.string().allow(null, ""),
 
-	neighborhood: joi.string(),
+	neighborhood: joi.string().allow(null, ""),
 
-	city: joi.string(),
+	city: joi.string().allow(null, ""),
 
-	state: joi.string(),
+	state: joi.string().allow(null, ""),
 });
 
 module.exports = customersSchema;

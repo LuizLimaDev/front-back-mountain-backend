@@ -30,10 +30,12 @@ const userSchema = joi.object({
 	cpf: joi
 		.string()
 		.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)
+		.allow(null, "")
 		.message("O CPF deve estar no formato XXX.XXX.XXX-XX"),
 	phone: joi
 		.string()
 		.pattern(/^\(\d{2}\) \d{4,5}-\d{4}$/)
+		.allow(null, "")
 		.message(
 			"O número de telefone com DDD deve estar no formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX"
 		),
@@ -57,18 +59,19 @@ const editUsersSchema = joi.object({
 		"string.min": "O campo nome precisa ter no mínimo 3 caracteres.",
 	}),
 	email,
-
-	newPassword: joi.string().min(8).max(32).messages({
+	newPassword: joi.string().allow(null, "").min(8).max(32).messages({
 		"string.min": "A senha precisa conter, no mínimo, 8 caracteres",
 		"string.max": "A senha precisa conter, no máximo, 32 caracteres",
 	}),
 	cpf: joi
 		.string()
 		.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)
+		.allow(null, "")
 		.message("O CPF deve estar no formato XXX.XXX.XXX-XX"),
 	phone: joi
 		.string()
 		.pattern(/^\(\d{2}\) \d{4,5}-\d{4}$/)
+		.allow(null, "")
 		.message(
 			"O número de telefone com DDD deve estar no formato (XX) XXXX-XXXX ou (XX) XXXXX-XXXX"
 		),
