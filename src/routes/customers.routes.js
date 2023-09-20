@@ -7,6 +7,7 @@ const {
 	listCustomers,
 	listCustomersMetrics,
 	createCustomers,
+	detailCustomers,
 } = require("../controllers/customersController");
 
 /**
@@ -285,6 +286,7 @@ customersRoutes.post(
 
 customersRoutes.get("/", listCustomers);
 customersRoutes.get("/metrics", listCustomersMetrics);
+customersRoutes.get("/:customerid", detailCustomers);
 
 /**
  * @swagger

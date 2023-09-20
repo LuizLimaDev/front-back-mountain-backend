@@ -174,8 +174,29 @@ const listCustomersMetrics = async (req, res) => {
 	}
 };
 
+const detailCustomers = async (req, res) => {
+	const { customerid } = req.params;
+
+	const detailsCustomer = await knex("customers").whereRaw(
+		`${customerid} = customers.id`
+	);
+
+	try {
+		if (detailsCustomer.length === 0) {
+			return res
+				.status(400)
+				.json({ mensagem: "Não existe cliente com o id informado" });
+		}
+
+		return res.status(200).json({ detailsCustomer });
+	} catch (error) {
+		return res.status(400).json(error.message);
+	}
+};
+
 module.exports = {
 	listCustomers,
 	createCustomers,
 	listCustomersMetrics,
+	detailCustomers,
 };
