@@ -183,11 +183,11 @@ const listCustomersMetrics = async (req, res) => {
 const detailCustomers = async (req, res) => {
 	const { customerid } = req.params;
 
-	const detailsCustomer = await knex("customers").whereRaw(
-		`${customerid} = customers.id`
-	);
-
 	try {
+		const detailsCustomer = await knex("customers").where(
+			"id",
+			Number(customerid)
+		);
 		if (detailsCustomer.length === 0) {
 			return res
 				.status(400)
@@ -203,11 +203,11 @@ const detailCustomers = async (req, res) => {
 const detailCustomerCharges = async (req, res) => {
 	const { customerid } = req.params;
 
-	const detailsCustomerCharges = await knex("charges").whereRaw(
-		`${customerid} = charges.customerid`
-	);
-
 	try {
+		const detailsCustomerCharges = await knex("charges").where(
+			"customerid",
+			Number(customerid)
+		);
 		if (detailsCustomerCharges.length === 0) {
 			return res
 				.status(400)
