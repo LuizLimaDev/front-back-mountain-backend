@@ -7,7 +7,6 @@ const {
 	verifyTheEnvironmentVariables,
 } = require("../middlewares/VerifyTheEnvironmentVariables");
 
-routes.get("/", verifyTheEnvironmentVariables);
 const { usersRoutes } = require("./users.routes");
 const ensureAuthenticated = require("../middlewares/ensureAuthenticated");
 const {
@@ -15,6 +14,9 @@ const {
 } = require("../middlewares/validateRequestParams");
 const { validateEmail } = require("../schemas/userSchema");
 const chargesRoutes = require("./charges.routes");
+const { envsSchemas } = require("../schemas/envsSchemas");
+
+routes.use(verifyTheEnvironmentVariables(envsSchemas));
 
 routes.get("/", apiHealth);
 routes.use("/customers", ensureAuthenticated, customersRoutes);
@@ -72,7 +74,6 @@ routes.get(
  *                   type: string
  *                   example: E-mail já está em uso
  */
-
 
 routes.use("/users", usersRoutes);
 routes.use("/charges", ensureAuthenticated, chargesRoutes);
