@@ -69,6 +69,13 @@ const createCustomers = async (req, res) => {
 			return res.status(203).json({ message: "O e-mail já existe." });
 		}
 
+		const cpfExists = await knex("customers").where({ cpf }).first();
+
+		
+		if (cpfExists) {
+			return res.status(203).json({ message: "O cpf já existe." });
+		}
+
 		const customer = await knex("customers")
 			.insert({
 				name,
