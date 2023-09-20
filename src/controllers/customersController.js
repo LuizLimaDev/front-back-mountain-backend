@@ -194,9 +194,30 @@ const detailCustomers = async (req, res) => {
 	}
 };
 
+const detailCustomerCharges = async (req, res) => {
+	const { customerid } = req.params;
+
+	const detailsCustomerCharges = await knex("charges").whereRaw(
+		`${customerid} = charges.customerid`
+	);
+
+	try {
+		if (detailsCustomerCharges.length === 0) {
+			return res
+				.status(400)
+				.json({ mensagem: "Não existe cobrança com o id informado" });
+		}
+
+		return res.status(200).json({ detailsCustomerCharges });
+	} catch (error) {
+		return res.status(400).json(error.message);
+	}
+};
+
 module.exports = {
 	listCustomers,
 	createCustomers,
 	listCustomersMetrics,
 	detailCustomers,
+	detailCustomerCharges,
 };
