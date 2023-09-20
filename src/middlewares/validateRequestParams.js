@@ -1,9 +1,15 @@
 const validateRequestParams = (joiSchema) => async (req, res, next) => {
 	try {
-		await joiSchema.validateAsync(req.params);
+		await joiSchema.validateAsync(req.params,  { abortEarly: false });
 		next();
 	} catch (error) {
-		return res.status(400).json({ mensagem: error.message });
+		const errors = error.details.map(error => {
+			return {
+				message: error.message,
+				type: error.context.label,
+			};
+		});
+		return res.status(400).json({ errors });
 	}
 };
 
