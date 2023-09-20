@@ -9,6 +9,7 @@ const {
 	createCustomers,
 	detailCustomers,
 	detailCustomerCharges,
+	updateCustomers,
 } = require("../controllers/customersController");
 
 /**
@@ -289,6 +290,12 @@ customersRoutes.get("/", listCustomers);
 customersRoutes.get("/metrics", listCustomersMetrics);
 customersRoutes.get("/:customerid", detailCustomers);
 customersRoutes.get("/:customerid/charges", detailCustomerCharges);
+
+customersRoutes.put(
+	"/:customerid",
+	validateRequestBody(customersSchema),
+	updateCustomers
+);
 
 /**
  * @swagger

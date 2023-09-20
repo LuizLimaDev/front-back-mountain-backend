@@ -71,7 +71,6 @@ const createCustomers = async (req, res) => {
 
 		const cpfExists = await knex("customers").where({ cpf }).first();
 
-		
 		if (cpfExists) {
 			return res.status(203).json({ message: "O cpf já existe." });
 		}
@@ -184,7 +183,7 @@ const listCustomersMetrics = async (req, res) => {
 const detailCustomers = async (req, res) => {
 	const { customerid } = req.params;
 
-	const detailsCustomer = await knex("customers").where(
+	const detailsCustomer = await knex("customers").whereRaw(
 		`${customerid} = customers.id`
 	);
 
@@ -204,9 +203,8 @@ const detailCustomers = async (req, res) => {
 const detailCustomerCharges = async (req, res) => {
 	const { customerid } = req.params;
 
-	const detailsCustomerCharges = await knex("charges").where(
-		"customerid",
-		customerid
+	const detailsCustomerCharges = await knex("charges").whereRaw(
+		`${customerid} = charges.customerid`
 	);
 
 	try {
@@ -222,10 +220,60 @@ const detailCustomerCharges = async (req, res) => {
 	}
 };
 
+const updateCustomers = async (req, res) => {
+	try {
+		const { customerid } = req.params;
+		const { name, email, phone, cpf } = req.body;
+
+		let customer = await knex("customers").where("id", customerid).first();
+
+		if (!customer) {
+			return res.status(404).json({ message: "Cliente não encontrado" });
+		}
+		const emailAlreadyExists = await knex("customers")
+			.where("email", email)
+			.whereNot("id", customerid)
+			.first();
+
+		if (emailAlreadyExists) {
+			res.status(400).json({
+				message:
+					"Nao pode mudar email, uma conta com esse email ja existe",
+			});
+		}
+
+		const cpfAlreadyExists = await knex("customers")
+			.where("cpf", cpf)
+			.whereNot("id", customerid)
+			.first();
+
+		if (cpfAlreadyExists) {
+			res.status(400).json({
+				message:
+					"Nao pode mudar o cpf, uma conta com esse cpf ja existe",
+			});
+		}
+
+		await knex("customers").where("id", customerid).update({
+			name,
+			email,
+			phone,
+			cpf,
+		});
+
+		return res
+			.status(200)
+			.json({ mensagem: "Cliente atualizado com sucesso." });
+	} catch (error) {
+		return res.status(400).json(error.message);
+	}
+};
+
 module.exports = {
 	listCustomers,
 	createCustomers,
 	listCustomersMetrics,
 	detailCustomers,
 	detailCustomerCharges,
+	updateCustomers,
 };

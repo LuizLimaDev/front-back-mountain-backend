@@ -21,7 +21,10 @@ const customersSchema = joi.object({
 		.string()
 		.required()
 		.pattern(/^\d{3}.\d{3}.\d{3}-\d{2}$/)
-		.message("O CPF deve estar no formato XXX.XXX.XXX-XX"),
+		.messages({
+			"string.pattern.base": "O CPF deve estar no formato XXX.XXX.XXX-XX",
+			"any.required": "O campo cpf é obrigatório",
+		}),
 
 	phone: joi.string().required().messages({
 		"any.required": "O campo telefone é obrigatório",
