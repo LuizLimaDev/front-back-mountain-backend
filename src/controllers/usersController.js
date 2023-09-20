@@ -100,14 +100,11 @@ const editUsers = async (req, res) => {
 			});
 		}
 
-		const cpfAlreadyExists = await knex("users")
-			.where("cpf", cpf)
-			.first();
+		const cpfAlreadyExists = await knex("users").where("cpf", cpf).first();
 
 		if (cpfAlreadyExists && cpfAlreadyExists.id !== user.id) {
 			res.status(400).json({
-				message:
-					"Nao pode mudar email, uma conta com esse email ja existe",
+				message: "Nao pode mudar cpf, uma conta com esse cpf ja existe",
 			});
 		}
 

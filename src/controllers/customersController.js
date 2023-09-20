@@ -237,12 +237,33 @@ const updateCustomers = async (req, res) => {
 	} = req.body;
 
 	try {
-		const existingCustomer = await knex("customers")
-			.where({ id: customerid })
+		const customer = await knex("customers")
+			.where("id", customerid)
 			.first();
 
-		if (!existingCustomer) {
+		if (!customer) {
 			return res.status(404).json({ message: "Cliente não encontrado." });
+		}
+
+		const emailAlreadyExists = await knex("customers")
+			.where("email", email)
+			.first();
+
+		if (emailAlreadyExists && emailAlreadyExists.id !== customer.id) {
+			return res.status(400).json({
+				message:
+					"Nao pode mudar email, uma conta com esse email ja existe",
+			});
+		}
+
+		const cpfAlreadyExists = await knex("customers")
+			.where("cpf", cpf)
+			.first();
+
+		if (cpfAlreadyExists && cpfAlreadyExists.id !== customer.id) {
+			return res.status(400).json({
+				message: "Nao pode mudar cpf, uma conta com esse cpf ja existe",
+			});
 		}
 
 		await knex("customers").where("id", customerid).update({
