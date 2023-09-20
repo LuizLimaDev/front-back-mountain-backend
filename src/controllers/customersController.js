@@ -184,7 +184,7 @@ const listCustomersMetrics = async (req, res) => {
 const detailCustomers = async (req, res) => {
 	const { customerid } = req.params;
 
-	const detailsCustomer = await knex("customers").whereRaw(
+	const detailsCustomer = await knex("customers").where(
 		`${customerid} = customers.id`
 	);
 
@@ -204,8 +204,9 @@ const detailCustomers = async (req, res) => {
 const detailCustomerCharges = async (req, res) => {
 	const { customerid } = req.params;
 
-	const detailsCustomerCharges = await knex("charges").whereRaw(
-		`${customerid} = charges.customerid`
+	const detailsCustomerCharges = await knex("charges").where(
+		"customerid",
+		customerid
 	);
 
 	try {
