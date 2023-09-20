@@ -221,51 +221,50 @@ const detailCustomerCharges = async (req, res) => {
 };
 
 const updateCustomers = async (req, res) => {
+	const { customerid } = req.params;
+
+	const {
+		name,
+		email,
+		cpf,
+		phone,
+		zipcode,
+		street,
+		complement,
+		neighborhood,
+		city,
+		state,
+	} = req.body;
+
 	try {
-		const { customerid } = req.params;
-		const { name, email, phone, cpf } = req.body;
-
-		let customer = await knex("customers").where("id", customerid).first();
-
-		if (!customer) {
-			return res.status(404).json({ message: "Cliente não encontrado" });
-		}
-		const emailAlreadyExists = await knex("customers")
-			.where("email", email)
-			.whereNot("id", customerid)
+		const existingCustomer = await knex("customers")
+			.where({ id: customerid })
 			.first();
 
-		if (emailAlreadyExists) {
-			res.status(400).json({
-				message:
-					"Nao pode mudar email, uma conta com esse email ja existe",
-			});
-		}
-
-		const cpfAlreadyExists = await knex("customers")
-			.where("cpf", cpf)
-			.whereNot("id", customerid)
-			.first();
-
-		if (cpfAlreadyExists) {
-			res.status(400).json({
-				message:
-					"Nao pode mudar o cpf, uma conta com esse cpf ja existe",
-			});
+		if (!existingCustomer) {
+			return res.status(404).json({ message: "Cliente não encontrado." });
 		}
 
 		await knex("customers").where("id", customerid).update({
 			name,
 			email,
-			phone,
 			cpf,
+			phone,
+			zipcode,
+			street,
+			complement,
+			neighborhood,
+			city,
+			state,
 		});
 
-		return res
-			.status(200)
-			.json({ mensagem: "Cliente atualizado com sucesso." });
+		const updatedCustomer = await knex("customers")
+			.where("id", customerid)
+			.first();
+
+		return res.status(200).json(updatedCustomer);
 	} catch (error) {
-		return res.status(400).json(error.message);
+		return res.status(500).json({ message: error.message });
 	}
 };
 
