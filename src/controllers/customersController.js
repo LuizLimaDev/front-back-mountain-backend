@@ -71,7 +71,6 @@ const createCustomers = async (req, res) => {
 
 		const cpfExists = await knex("customers").where({ cpf }).first();
 
-		
 		if (cpfExists) {
 			return res.status(203).json({ message: "O cpf já existe." });
 		}
@@ -183,9 +182,12 @@ const listCustomersMetrics = async (req, res) => {
 
 const detailCustomers = async (req, res) => {
 	const { customerid } = req.params;
-	
+
 	try {
-		const detailsCustomer = await knex("customers").where("id", Number(customerid));
+		const detailsCustomer = await knex("customers").where(
+			"id",
+			Number(customerid)
+		);
 		if (detailsCustomer.length === 0) {
 			return res
 				.status(400)
@@ -201,10 +203,11 @@ const detailCustomers = async (req, res) => {
 const detailCustomerCharges = async (req, res) => {
 	const { customerid } = req.params;
 
-
-
 	try {
-			const detailsCustomerCharges = await knex("charges").where("customerid", Number(customerid));
+		const detailsCustomerCharges = await knex("charges").where(
+			"customerid",
+			Number(customerid)
+		);
 		if (detailsCustomerCharges.length === 0) {
 			return res
 				.status(400)
@@ -217,10 +220,80 @@ const detailCustomerCharges = async (req, res) => {
 	}
 };
 
+const updateCustomers = async (req, res) => {
+	const { customerid } = req.params;
+
+	const {
+		name,
+		email,
+		cpf,
+		phone,
+		zipcode,
+		street,
+		complement,
+		neighborhood,
+		city,
+		state,
+	} = req.body;
+
+	try {
+		const customer = await knex("customers")
+			.where("id", customerid)
+			.first();
+
+		if (!customer) {
+			return res.status(404).json({ message: "Cliente não encontrado." });
+		}
+
+		const emailAlreadyExists = await knex("customers")
+			.where("email", email)
+			.first();
+
+		if (emailAlreadyExists && emailAlreadyExists.id !== customer.id) {
+			return res.status(400).json({
+				message:
+					"Nao pode mudar email, uma conta com esse email ja existe",
+			});
+		}
+
+		const cpfAlreadyExists = await knex("customers")
+			.where("cpf", cpf)
+			.first();
+
+		if (cpfAlreadyExists && cpfAlreadyExists.id !== customer.id) {
+			return res.status(400).json({
+				message: "Nao pode mudar cpf, uma conta com esse cpf ja existe",
+			});
+		}
+
+		await knex("customers").where("id", customerid).update({
+			name,
+			email,
+			cpf,
+			phone,
+			zipcode,
+			street,
+			complement,
+			neighborhood,
+			city,
+			state,
+		});
+
+		const updatedCustomer = await knex("customers")
+			.where("id", customerid)
+			.first();
+
+		return res.status(200).json(updatedCustomer);
+	} catch (error) {
+		return res.status(500).json({ message: error.message });
+	}
+};
+
 module.exports = {
 	listCustomers,
 	createCustomers,
 	listCustomersMetrics,
 	detailCustomers,
 	detailCustomerCharges,
+	updateCustomers,
 };
