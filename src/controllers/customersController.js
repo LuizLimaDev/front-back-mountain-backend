@@ -188,11 +188,6 @@ const detailCustomers = async (req, res) => {
 			"id",
 			Number(customerid)
 		);
-		if (detailsCustomer.length === 0) {
-			return res
-				.status(400)
-				.json({ mensagem: "Não existe cliente com o id informado" });
-		}
 
 		return res.status(200).json({ detailsCustomer });
 	} catch (error) {
@@ -204,15 +199,7 @@ const detailCustomerCharges = async (req, res) => {
 	const { customerid } = req.params;
 
 	try {
-		const detailsCustomerCharges = await knex("charges").where(
-			"customerid",
-			Number(customerid)
-		);
-		if (detailsCustomerCharges.length === 0) {
-			return res
-				.status(400)
-				.json({ mensagem: "Não existe cobrança com o id informado" });
-		}
+		const detailsCustomerCharges = await knex("charges").where("customerid", Number(customerid));
 
 		return res.status(200).json({ detailsCustomerCharges });
 	} catch (error) {
@@ -237,6 +224,7 @@ const updateCustomers = async (req, res) => {
 	} = req.body;
 
 	try {
+		let errors = [];
 		const customer = await knex("customers")
 			.where("id", customerid)
 			.first();
@@ -250,20 +238,23 @@ const updateCustomers = async (req, res) => {
 			.first();
 
 		if (emailAlreadyExists && emailAlreadyExists.id !== customer.id) {
-			return res.status(400).json({
-				message:
-					"Nao pode mudar email, uma conta com esse email ja existe",
+			errors.push({
+				type: "email",
+				message:"Nao pode mudar email, uma conta com esse email ja existe"
 			});
 		}
 
-		const cpfAlreadyExists = await knex("customers")
-			.where("cpf", cpf)
-			.first();
+		const cpfAlreadyExists = await knex("customers").where("cpf", cpf).first();
 
 		if (cpfAlreadyExists && cpfAlreadyExists.id !== customer.id) {
-			return res.status(400).json({
-				message: "Nao pode mudar cpf, uma conta com esse cpf ja existe",
+			errors.push({
+				type: "cpf",
+				message:"Nao pode mudar cpf, uma conta com esse cpf ja existe"
 			});
+		}
+
+		if(errors.length > 0){
+			return res.status(400).json({ errors });
 		}
 
 		await knex("customers").where("id", customerid).update({
