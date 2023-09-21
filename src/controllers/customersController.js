@@ -240,7 +240,7 @@ const updateCustomers = async (req, res) => {
 		if (emailAlreadyExists && emailAlreadyExists.id !== customer.id) {
 			errors.push({
 				type: "email",
-				message:"Nao pode mudar email, uma conta com esse email ja existe"
+				message:"Uma conta com esse email ja existe"
 			});
 		}
 
@@ -249,7 +249,16 @@ const updateCustomers = async (req, res) => {
 		if (cpfAlreadyExists && cpfAlreadyExists.id !== customer.id) {
 			errors.push({
 				type: "cpf",
-				message:"Nao pode mudar cpf, uma conta com esse cpf ja existe"
+				message:"Uma conta com esse cpf ja existe"
+			});
+		}
+
+		const phoneAlreadyExists = await knex("customers").where("phone", phone).first();
+
+		if (phoneAlreadyExists && phoneAlreadyExists.id !== customer.id) {
+			errors.push({
+				type: "phone",
+				message:"Uma conta com esse telefone ja existe"
 			});
 		}
 
