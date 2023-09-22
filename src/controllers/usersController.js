@@ -48,7 +48,7 @@ const sessionsUsers = async (req, res) => {
 
 		if (!passwordPassed) {
 			errors.push({
-				type: "email",
+				type: "password",
 				message: "Senha inválida"
 			});
 		}
