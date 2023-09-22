@@ -106,7 +106,7 @@ const editUsers = async (req, res) => {
 			.where("email", email)
 			.first();
 
-		if (emailAlreadyExists && emailAlreadyExists.id !== user.id) {
+		if (email && emailAlreadyExists && emailAlreadyExists.id !== user.id) {
 			errors.push({
 				type: "email",
 				message: "Uma conta com esse email ja existe"
@@ -115,7 +115,7 @@ const editUsers = async (req, res) => {
 
 		const cpfAlreadyExists = await knex("users").where("cpf", cpf).first();
 
-		if (cpfAlreadyExists && cpfAlreadyExists.id !== user.id) {
+		if (cpf && cpfAlreadyExists && cpfAlreadyExists.id !== user.id) {
 			errors.push({
 				type: "cpf",
 				message: "Uma conta com esse cpf ja existe"
