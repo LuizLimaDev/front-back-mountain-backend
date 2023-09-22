@@ -65,14 +65,26 @@ const createCustomers = async (req, res) => {
 			.update({ status: "vencido" });
 		const emailExists = await knex("customers").where({ email }).first();
 
+		let errors = [];
+
 		if (emailExists) {
-			return res.status(203).json({ message: "O e-mail já existe." });
+			errors.push({
+				type: "email",
+				message: "O e-mail já existe."
+			});
 		}
 
 		const cpfExists = await knex("customers").where({ cpf }).first();
 
 		if (cpfExists) {
-			return res.status(203).json({ message: "O cpf já existe." });
+			errors.push({
+				type: "cpf",
+				message: "O cpf já existe."
+			});
+		}
+
+		if(errors.length > 0){
+			return res.status(401).json({errors});
 		}
 
 		const customer = await knex("customers")
