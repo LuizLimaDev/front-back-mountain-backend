@@ -34,16 +34,27 @@ const sessionsUsers = async (req, res) => {
 	const { email, password } = req.body;
 
 	try {
+		let errors = [];
 		const user = await knex("users").where("email", email).first();
 
 		if (!user) {
-			return res.status(404).json({ message: "Usuário não encontrado" });
+			errors.push({
+				type: "email",
+				message: "Usuário não encontrado"
+			});
 		}
 
 		const passwordPassed = await compare(password, user.password);
 
 		if (!passwordPassed) {
-			return res.status(403).json({ message: "Senha inválida" });
+			errors.push({
+				type: "email",
+				message: "Senha inválida"
+			});
+		}
+
+		if(errors.length > 0){
+			return res.status(401).json({errors});
 		}
 
 		const token = sign({}, secret, {
