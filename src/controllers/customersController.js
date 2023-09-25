@@ -83,8 +83,8 @@ const createCustomers = async (req, res) => {
 			});
 		}
 
-		if(errors.length > 0){
-			return res.status(401).json({errors});
+		if (errors.length > 0) {
+			return res.status(401).json({ errors });
 		}
 
 		const customer = await knex("customers")
@@ -252,7 +252,7 @@ const updateCustomers = async (req, res) => {
 		if (emailAlreadyExists && emailAlreadyExists.id !== customer.id) {
 			errors.push({
 				type: "email",
-				message:"Uma conta com esse email ja existe"
+				message: "Uma conta com esse email ja existe"
 			});
 		}
 
@@ -261,7 +261,7 @@ const updateCustomers = async (req, res) => {
 		if (cpfAlreadyExists && cpfAlreadyExists.id !== customer.id) {
 			errors.push({
 				type: "cpf",
-				message:"Uma conta com esse cpf ja existe"
+				message: "CPF já existente!"
 			});
 		}
 
@@ -270,11 +270,11 @@ const updateCustomers = async (req, res) => {
 		if (phoneAlreadyExists && phoneAlreadyExists.id !== customer.id) {
 			errors.push({
 				type: "phone",
-				message:"Uma conta com esse telefone ja existe"
+				message: "Uma conta com esse telefone ja existe"
 			});
 		}
 
-		if(errors.length > 0){
+		if (errors.length > 0) {
 			return res.status(400).json({ errors });
 		}
 
