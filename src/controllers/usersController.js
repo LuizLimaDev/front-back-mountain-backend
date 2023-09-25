@@ -94,6 +94,8 @@ const editUsers = async (req, res) => {
 		const { id } = req.user;
 		const { name, email, newPassword, phone, cpf } = req.body;
 
+		let errors = [];
+
 		let user = await knex("users").where("id", id).first();
 
 		if (!user) {
@@ -104,19 +106,24 @@ const editUsers = async (req, res) => {
 			.where("email", email)
 			.first();
 
-		if (emailAlreadyExists && emailAlreadyExists.id !== user.id) {
-			res.status(400).json({
-				message:
-					"Nao pode mudar email, uma conta com esse email ja existe",
+		if (email && emailAlreadyExists && emailAlreadyExists.id !== user.id) {
+			errors.push({
+				type: "email",
+				message: "Uma conta com esse email ja existe"
 			});
 		}
 
 		const cpfAlreadyExists = await knex("users").where("cpf", cpf).first();
 
-		if (cpfAlreadyExists && cpfAlreadyExists.id !== user.id) {
-			res.status(400).json({
-				message: "Nao pode mudar cpf, uma conta com esse cpf ja existe",
+		if (cpf && cpfAlreadyExists && cpfAlreadyExists.id !== user.id) {
+			errors.push({
+				type: "cpf",
+				message: "Uma conta com esse cpf ja existe"
 			});
+		}
+
+		if(errors.length > 0){
+			return res.status(401).json({ errors });
 		}
 
 		user.name = name ?? user.name;
