@@ -31,7 +31,7 @@ const userSchema = joi.object({
 		.string()
 		.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)
 		.allow(null, "")
-		.message("O CPF deve estar no formato XXX.XXX.XXX-XX"),
+		.message("Formato correto: XXX.XXX.XXX-XX"),
 	phone: joi
 		.string()
 		.pattern(/^\(\d{2}\) \d{4,5}-\d{4}$/)
@@ -67,7 +67,7 @@ const editUsersSchema = joi.object({
 		.string()
 		.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/)
 		.allow(null, "")
-		.message("O CPF deve estar no formato XXX.XXX.XXX-XX"),
+		.message("Formato correto: XXX.XXX.XXX-XX"),
 	phone: joi
 		.string()
 		.pattern(/^\(\d{2}\) \d{4,5}-\d{4}$/)

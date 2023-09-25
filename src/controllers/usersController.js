@@ -56,8 +56,8 @@ const sessionsUsers = async (req, res) => {
 			});
 		}
 
-		if(errors.length > 0){
-			return res.status(401).json({errors});
+		if (errors.length > 0) {
+			return res.status(401).json({ errors });
 		}
 
 		const token = sign({}, secret, {
@@ -121,11 +121,11 @@ const editUsers = async (req, res) => {
 		if (cpf && cpfAlreadyExists && cpfAlreadyExists.id !== user.id) {
 			errors.push({
 				type: "cpf",
-				message: "Uma conta com esse cpf ja existe"
+				message: "CPF já existente!"
 			});
 		}
 
-		if(errors.length > 0){
+		if (errors.length > 0) {
 			return res.status(401).json({ errors });
 		}
 
