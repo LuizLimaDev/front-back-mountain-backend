@@ -27,7 +27,7 @@ const chargesSchema = joi.object({
 	value: joi.number().positive().required().messages({
 		"number.empty": "O campo status é obrigatório",
 		"any.required": "O campo status é obrigatório",
-		"any.positive": "O campo de valor precisar ser positivo",
+		"number.positive": "O campo de valor precisar ser positivo",
 	}),
 });
 
