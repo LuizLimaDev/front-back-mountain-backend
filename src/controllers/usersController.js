@@ -42,6 +42,9 @@ const sessionsUsers = async (req, res) => {
 				type: "email",
 				message: "Usuário não encontrado"
 			});
+			return res.status(400).json({
+				errors
+			});
 		}
 
 		const passwordPassed = await compare(password, user.password);
