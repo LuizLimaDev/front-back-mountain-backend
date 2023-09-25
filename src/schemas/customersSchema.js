@@ -24,6 +24,7 @@ const customersSchema = joi.object({
 		.messages({
 			"string.pattern.base": "Formato correto: XXX.XXX.XXX-XX",
 			"any.required": "O campo cpf é obrigatório",
+			"string.empty": "O campo cpf é obrigatório",
 		}),
 
 	phone: joi.string().required().messages({
