@@ -11,13 +11,13 @@ const chargesSchema = joi.object({
 		"any.required": "O campo customerid é obrigatório",
 	}),
 	description: joi.string().min(3).required().messages({
-		"any.required": "O campo descrição é obrigatório",
-		"string.empty": "O campo descrição é obrigatório",
+		"any.required": "Este campo é obrigatório",
+		"string.empty": "Este campo é obrigatório",
 		"string.min": "O campo descrição precisa ter no mínimo 3 caracteres",
 	}),
 	dueDate: joi.string().required().messages({
-		"any.required": "O campo data é obrigatório",
-		"string.empty": "O campo data é obrigatório",
+		"any.required": "Este campo é obrigatório",
+		"string.empty": "Este campo é obrigatório",
 	}),
 	status: joi.string().valid("pago", "pendente").required().messages({
 		"string.empty": "O campo status é obrigatório",
