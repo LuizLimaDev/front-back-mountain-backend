@@ -11,22 +11,22 @@ const chargesSchema = joi.object({
 		"any.required": "O campo customerid é obrigatório",
 	}),
 	description: joi.string().min(3).required().messages({
-		"any.required": "Este campo é obrigatório",
-		"string.empty": "Este campo é obrigatório",
+		"any.required": "Este campo deve ser preenchido",
+		"string.empty": "Este campo deve ser preenchido",
 		"string.min": "O campo descrição precisa ter no mínimo 3 caracteres",
 	}),
 	dueDate: joi.string().required().messages({
-		"any.required": "Este campo é obrigatório",
-		"string.empty": "Este campo é obrigatório",
+		"any.required": "Este campo deve ser preenchido",
+		"string.empty": "Este campo deve ser preenchido",
 	}),
 	status: joi.string().valid("pago", "pendente").required().messages({
-		"string.empty": "O campo status é obrigatório",
-		"any.required": "O campo status é obrigatório",
+		"string.empty": "Este campo deve ser preenchido",
+		"any.required": "Este campo deve ser preenchido",
 		"any.only": "O campo status precisa ser do tipo pago ou pendente",
 	}),
 	value: joi.number().positive().required().messages({
-		"number.empty": "O campo status é obrigatório",
-		"any.required": "O campo status é obrigatório",
+		"number.empty": "Este campo deve ser preenchido",
+		"any.required": "Este campo deve ser preenchido",
 		"number.positive": "O campo de valor precisar ser positivo",
 	}),
 });
