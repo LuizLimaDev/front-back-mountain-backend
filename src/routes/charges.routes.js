@@ -1,9 +1,14 @@
 const { Router } = require("express");
 const chargesRoutes = Router();
 const { validateRequestBody } = require("../middlewares/validateRequestBody");
-const {chargesSchema} = require("../schemas/chargesSchema");
+const { chargesSchema } = require("../schemas/chargesSchema");
 
-const { createCharges, listCharges, listChargesMetrics } = require("../controllers/chargesController");
+const {
+	createCharges,
+	listCharges,
+	listChargesMetrics,
+	deleteCharges,
+} = require("../controllers/chargesController");
 
 /**
  * @swagger
@@ -116,11 +121,7 @@ const { createCharges, listCharges, listChargesMetrics } = require("../controlle
  *                   message: O campo de valor precisa ser positivo
  */
 
-chargesRoutes.post(
-	"/",
-	validateRequestBody(chargesSchema),
-	createCharges
-);
+chargesRoutes.post("/", validateRequestBody(chargesSchema), createCharges);
 /**
  * @swagger
  * /charges:
@@ -392,5 +393,6 @@ chargesRoutes.get("/metrics", listChargesMetrics);
  *                     name: "Ricardo"
  */
 
+chargesRoutes.delete("/:id", deleteCharges);
 
 module.exports = chargesRoutes;
