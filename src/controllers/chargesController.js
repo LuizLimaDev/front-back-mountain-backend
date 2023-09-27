@@ -91,7 +91,6 @@ const createCharges = async (req, res) => {
 
 const listCharges = async (req, res) => {
 	try {
-		
 		await knex("charges").where("duedate", "<", knex.fn.now()).andWhere("status","pendente").update({status: "vencido"});
 		const charges = await knex("customers")
 			.select("charges.*", "customers.name")
@@ -104,7 +103,14 @@ const listCharges = async (req, res) => {
 						queryBuilder.where("charges.id", req.query.search ? req.query.search : "");
 					}
 				}
-			});
+				if(JSON.parse(req.query.filter).length){
+					queryBuilder.whereIn("charges.status", JSON.parse(req.query.filter));
+				}
+			})
+			.orderBy([
+				{ column: "charges.id", order: "desc" }, 
+				{ column: "customers.name", order: "asc"}
+			]);
 			
 		
 		return res.status(200).json({
