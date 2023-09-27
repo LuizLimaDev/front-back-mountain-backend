@@ -110,7 +110,7 @@ const listCharges = async (req, res) => {
 					queryBuilder.orderBy("customers.name", req.query.orderName);
 				}
 				if(req.query.orderIdCharge){
-					queryBuilder.orderBy("charges.id", req.query.orderName);
+					queryBuilder.orderBy("charges.id", req.query.orderIdCharge);
 				}
 			});
 			
