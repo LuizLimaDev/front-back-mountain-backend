@@ -77,7 +77,7 @@ const profileUsers = async (req, res) => {
 
 	try {
 		const user = await knex("users")
-			.select("name", "email")
+			.select("name", "email", "cpf", "phone")
 			.where("id", id)
 			.first();
 
