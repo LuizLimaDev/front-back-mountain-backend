@@ -7,6 +7,66 @@ const listCustomers = async (req, res) => {
 			.where("duedate", "<", knex.fn.now())
 			.andWhere("status", "pendente")
 			.update({ status: "vencido" });
+
+		if(req.query.filter === "emDia"){
+			const customers = await knex("customers")
+				.distinct("customers.id", "customers.*", "status")
+				.leftJoin("charges", "customers.id", "=", function () {
+					this.select("id")
+						.from("charges")
+						.whereRaw("charges.customerid = customers.id")
+						.orderBy("id", "asc")
+						.limit(1);
+				})
+				.whereNotExists(function () {
+					this.select("*")
+						.from("charges")
+						.whereRaw("customers.id = charges.customerId")
+						.whereIn("charges.status", ["pendente", "vencido"]);
+				})
+				.where((builder) => {
+					builder.whereIn("status", ["pago"]).orWhereNull("status");
+				})
+				.modify(function (queryBuilder){
+					if(req.query.search){
+						queryBuilder.where("customers.name", req.query.search)
+							.orWhere("customers.cpf", req.query.search)
+							.orWhere("customers.email", req.query.search);
+					}
+				}) // filtro pelo nome, email e cpf
+				.modify(function (queryBuilder){
+					if(req.query.orderName){
+						queryBuilder.orderBy("name", req.query.orderName);
+					}
+				}); // ordernação por nome
+			return res.json({ customers });
+		} else if(req.query.filter === "inadimplente") {
+			const customers = await knex("customers")
+				.modify(function (queryBuilder) {
+					if (process.env.NODE_ENV === "production") {
+						queryBuilder.distinctOn("customers.id", "customers.name");
+					} else {
+						queryBuilder.groupBy("customers.id");
+					}
+				})
+				.select("customers.*", "charges.status")
+				.leftJoin("charges", "customers.id", "=", "charges.customerid")
+				.whereIn("status", ["pendente", "vencido"])
+				.modify(function (queryBuilder){
+					if(req.query.search){
+						queryBuilder.where("customers.name", req.query.search)
+							.orWhere("customers.cpf", req.query.search)
+							.orWhere("customers.email", req.query.search);
+					}
+				}) // filtro pelo nome, email e cpf
+				.modify(function (queryBuilder){
+					if(req.query.orderName){
+						queryBuilder.orderBy("name", req.query.orderName);
+					}
+				}); // ordernação por nome
+			return res.status(200).json({customers});
+		}
+
 		const customers = await knex("customers")
 			.modify(function (queryBuilder) {
 				if (process.env.NODE_ENV === "production") {
@@ -20,7 +80,7 @@ const listCustomers = async (req, res) => {
 			.whereNotExists(function () {
 				this.select("*")
 					.from("charges")
-					.whereRaw("customers.id = charges.customerId")
+					.whereRaw("customers.id = charges.customerid")
 					.whereIn("charges.status", ["pendente", "vencido"]);
 			})
 			.where((builder) => {
@@ -32,38 +92,35 @@ const listCustomers = async (req, res) => {
 						.orWhere("customers.cpf", req.query.search)
 						.orWhere("customers.email", req.query.search);
 				}
-			})
-			.modify(function (queryBuilder){
-				queryBuilder.union(
-					knex("customers")
-						.modify(function (queryBuilder) {
-							if (process.env.NODE_ENV === "production") {
-								queryBuilder.distinctOn("customers.id");
-							} else {
-								queryBuilder.groupBy("customers.id");
-							}
-						})
-						.select("customers.*", "charges.status")
-						.leftJoin("charges", "customers.id", "=", "charges.customerid")
-						.whereIn("status", ["pendente", "vencido"])
-						.modify(function (queryBuilder){
-							if(req.query.search){
-								queryBuilder.where("customers.name", req.query.search)
-									.orWhere("customers.cpf", req.query.search)
-									.orWhere("customers.email", req.query.search);
-							}
-						})
-				);
-			})
+			}) // filtro pelo nome, email e cpf
+			.union(
+				knex("customers")
+					.modify(function (queryBuilder) {
+						if (process.env.NODE_ENV === "production") {
+							queryBuilder.distinctOn("customers.id");
+						} else {
+							queryBuilder.groupBy("customers.id");
+						}
+					})
+					.select("customers.*", "charges.status")
+					.leftJoin("charges", "customers.id", "=", "charges.customerid")
+					.whereIn("status", ["pendente", "vencido"])
+					.modify(function (queryBuilder){
+						if(req.query.search){
+							queryBuilder.where("customers.name", req.query.search)
+								.orWhere("customers.cpf", req.query.search)
+								.orWhere("customers.email", req.query.search);
+						}
+					}) // filtro pelo nome, email e cpf
+			)
 			.modify(function (queryBuilder){
 				if(req.query.orderName){
 					queryBuilder.orderBy("name", req.query.orderName);
 				}
-			});
+			}); // ordernação por nome
 			
-
-
 		return res.json({ customers });
+
 	} catch (error) {
 		return res.status(500).json({ mensagem: error.message });
 	}
