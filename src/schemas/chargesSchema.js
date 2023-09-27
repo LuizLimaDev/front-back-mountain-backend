@@ -46,7 +46,7 @@ const updateChargesSchema = joi.object({
 		"any.required": "Este campo deve ser preenchido",
 		"number.positive": "O campo de valor precisar ser positivo",
 	}),
-	duedate: joi.string().required().messages({
+	dueDate: joi.string().required().messages({
 		"any.required": "Este campo deve ser preenchido",
 		"string.empty": "Este campo deve ser preenchido",
 	}),
