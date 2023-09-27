@@ -174,7 +174,47 @@ const updateCharges = async (req, res) => {
 			.status(200)
 			.json({ message: "Cobrança editada com sucesso!" });
 	} catch (error) {
-		return res.status(500).json(error.message);
+    console.log(error);
+    return res.status(500).json({message:"Server Internal Error"});
+  }
+}
+
+const deleteCharges = async (req, res) => {
+	try {
+		const { id } = req.params;
+
+		const existingCharge = await knex("charges")
+			.select("status", "duedate")
+			.where("id", id)
+			.first();
+
+		if (!existingCharge) {
+			return res
+				.status(404)
+				.json({ mensagem: "Cobrança não encontrada." });
+		}
+
+		if (existingCharge.status === "pago") {
+			return res.status(400).json({
+				mensagem: "Esta cobrança não pode ser excluída!",
+			});
+		}
+
+		const currentDate = new Date();
+		const dueDate = new Date(existingCharge.duedate);
+
+		if (dueDate >= currentDate) {
+			return res.status(400).json({
+				mensagem: "Esta cobrança não pode ser excluída!",
+			});
+		}
+
+		await knex("charges").where("id", id).del();
+
+		return res.status(204).send();
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ message: "Server Internal Error"});
 	}
 };
 
@@ -183,4 +223,5 @@ module.exports = {
 	createCharges,
 	listChargesMetrics,
 	updateCharges,
+	deleteCharges,
 };

@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const chargesRoutes = Router();
 const { validateRequestBody } = require("../middlewares/validateRequestBody");
+
 const {
 	chargesSchema,
 	updateChargesSchema,
@@ -11,6 +12,7 @@ const {
 	listCharges,
 	listChargesMetrics,
 	updateCharges,
+	deleteCharges,
 } = require("../controllers/chargesController");
 
 /**
@@ -396,10 +398,12 @@ chargesRoutes.get("/metrics", listChargesMetrics);
  *                     name: "Ricardo"
  */
 
+
 chargesRoutes.put(
 	"/:id",
 	validateRequestBody(updateChargesSchema),
 	updateCharges
 );
+chargesRoutes.delete("/:id", deleteCharges);
 
 module.exports = chargesRoutes;
