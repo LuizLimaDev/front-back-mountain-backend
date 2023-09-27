@@ -103,14 +103,16 @@ const listCharges = async (req, res) => {
 						queryBuilder.where("charges.id", req.query.search ? req.query.search : "");
 					}
 				}
-				if(JSON.parse(req.query.filter).length){
+				if(req.query.filter){
 					queryBuilder.whereIn("charges.status", JSON.parse(req.query.filter));
 				}
-			})
-			.orderBy([
-				{ column: "charges.id", order: "desc" }, 
-				{ column: "customers.name", order: "asc"}
-			]);
+				if(req.query.orderName){
+					queryBuilder.orderBy("customers.name", req.query.orderName);
+				}
+				if(req.query.orderIdCharge){
+					queryBuilder.orderBy("charges.id", req.query.orderName);
+				}
+			});
 			
 		
 		return res.status(200).json({
