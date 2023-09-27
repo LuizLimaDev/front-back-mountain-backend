@@ -27,6 +27,13 @@ const listCustomers = async (req, res) => {
 				builder.whereIn("status", ["pago"]).orWhereNull("status");
 			})
 			.modify(function (queryBuilder){
+				if(req.query.search){
+					queryBuilder.where("customers.name", req.query.search)
+						.orWhere("customers.cpf", req.query.search)
+						.orWhere("customers.email", req.query.search);
+				}
+			})
+			.modify(function (queryBuilder){
 				queryBuilder.union(
 					knex("customers")
 						.modify(function (queryBuilder) {
@@ -39,6 +46,13 @@ const listCustomers = async (req, res) => {
 						.select("customers.*", "charges.status")
 						.leftJoin("charges", "customers.id", "=", "charges.customerid")
 						.whereIn("status", ["pendente", "vencido"])
+						.modify(function (queryBuilder){
+							if(req.query.search){
+								queryBuilder.where("customers.name", req.query.search)
+									.orWhere("customers.cpf", req.query.search)
+									.orWhere("customers.email", req.query.search);
+							}
+						})
 				);
 			})
 			.modify(function (queryBuilder){
