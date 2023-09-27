@@ -91,10 +91,21 @@ const createCharges = async (req, res) => {
 
 const listCharges = async (req, res) => {
 	try {
+		
 		await knex("charges").where("duedate", "<", knex.fn.now()).andWhere("status","pendente").update({status: "vencido"});
 		const charges = await knex("customers")
-			.select("charges.*")
-			.rightJoin("charges", "customers.id", "=","charges.customerid");
+			.select("charges.*", "customers.name")
+			.rightJoin("charges", "customers.id", "=","charges.customerid")
+			.modify(function(queryBuilder){
+				if(req.query.search) {
+					if( isNaN(Number(req.query.search)) ){
+						queryBuilder.where("customers.name", req.query.search ? req.query.search : "");
+					} else{
+						queryBuilder.where("charges.id", req.query.search ? req.query.search : "");
+					}
+				}
+			});
+			
 		
 		return res.status(200).json({
 			charges
