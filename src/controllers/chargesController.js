@@ -147,6 +147,38 @@ const listCharges = async (req, res) => {
 	}
 };
 
+const updateCharges = async (req, res) => {
+	const { id } = req.params;
+
+	const { description, status, value, duedate } = req.body;
+
+	try {
+		const charge = await knex("charges").where("id", id).first();
+
+		if (!charge) {
+			return res
+				.status(404)
+				.json({ message: "Cobrança não encontrada." });
+		}
+
+		await knex("charges")
+			.update({
+				description,
+				status,
+				value,
+				duedate,
+			})
+			.where("id", id);
+
+		return res
+			.status(200)
+			.json({ message: "Cobrança editada com sucesso!" });
+	} catch (error) {
+    console.log(error);
+    return res.status(500).json({message:"Server Internal Error"});
+  }
+}
+
 const deleteCharges = async (req, res) => {
 	try {
 		const { id } = req.params;
@@ -182,7 +214,7 @@ const deleteCharges = async (req, res) => {
 		return res.status(204).send();
 	} catch (error) {
 		console.log(error);
-		return res.status(500).json(error.message);
+		return res.status(500).json({ message: "Server Internal Error"});
 	}
 };
 
@@ -190,5 +222,6 @@ module.exports = {
 	listCharges,
 	createCharges,
 	listChargesMetrics,
+	updateCharges,
 	deleteCharges,
 };
