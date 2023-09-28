@@ -113,15 +113,9 @@ const listCharges = async (req, res) => {
 			.modify(function (queryBuilder) {
 				if (req.query.search) {
 					if (isNaN(Number(req.query.search))) {
-						queryBuilder.where(
-							"customers.name",
-							req.query.search ? req.query.search : ""
-						);
+						queryBuilder.whereILike("customers.name",`%${req.query.search}%`);
 					} else {
-						queryBuilder.where(
-							"charges.id",
-							req.query.search ? req.query.search : ""
-						);
+						queryBuilder.where("charges.id", req.query.search);
 					}
 				}
 				if (req.query.filter) {
@@ -174,10 +168,10 @@ const updateCharges = async (req, res) => {
 			.status(200)
 			.json({ message: "Cobrança editada com sucesso!" });
 	} catch (error) {
-    console.log(error);
-    return res.status(500).json({message:"Server Internal Error"});
-  }
-}
+		console.log(error);
+		return res.status(500).json({message:"Server Internal Error"});
+	}
+};
 
 const deleteCharges = async (req, res) => {
 	try {

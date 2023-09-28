@@ -29,9 +29,9 @@ const listCustomers = async (req, res) => {
 				})
 				.modify(function (queryBuilder){
 					if(req.query.search){
-						queryBuilder.where("customers.name", req.query.search)
-							.orWhere("customers.cpf", req.query.search)
-							.orWhere("customers.email", req.query.search);
+						queryBuilder.whereILike("customers.name", `%${req.query.search}%`)
+							.orWhereILike("customers.cpf", `%${req.query.search}%`)
+							.orWhereILike("customers.email", `%${req.query.search}%`);
 					}
 				}) // filtro pelo nome, email e cpf
 				.modify(function (queryBuilder){
@@ -54,9 +54,9 @@ const listCustomers = async (req, res) => {
 				.whereIn("status", ["pendente", "vencido"])
 				.modify(function (queryBuilder){
 					if(req.query.search){
-						queryBuilder.where("customers.name", req.query.search)
-							.orWhere("customers.cpf", req.query.search)
-							.orWhere("customers.email", req.query.search);
+						queryBuilder.whereILike("customers.name", `%${req.query.search}%`)
+							.orWhereILike("customers.cpf", `%${req.query.search}%`)
+							.orWhereILike("customers.email", `%${req.query.search}%`);
 					}
 				}) // filtro pelo nome, email e cpf
 				.modify(function (queryBuilder){
@@ -88,9 +88,9 @@ const listCustomers = async (req, res) => {
 			})
 			.modify(function (queryBuilder){
 				if(req.query.search){
-					queryBuilder.where("customers.name", req.query.search)
-						.orWhere("customers.cpf", req.query.search)
-						.orWhere("customers.email", req.query.search);
+					queryBuilder.whereILike("customers.name", `%${req.query.search}%`)
+						.orWhereILike("customers.cpf", `%${req.query.search}%`)
+						.orWhereILike("customers.email", `%${req.query.search}%`);
 				}
 			}) // filtro pelo nome, email e cpf
 			.union(
@@ -107,9 +107,9 @@ const listCustomers = async (req, res) => {
 					.whereIn("status", ["pendente", "vencido"])
 					.modify(function (queryBuilder){
 						if(req.query.search){
-							queryBuilder.where("customers.name", req.query.search)
-								.orWhere("customers.cpf", req.query.search)
-								.orWhere("customers.email", req.query.search);
+							queryBuilder.whereILike("customers.name", `%${req.query.search}%`)
+								.orWhereILike("customers.cpf", `%${req.query.search}%`)
+								.orWhereILike("customers.email", `%${req.query.search}%`);
 						}
 					}) // filtro pelo nome, email e cpf
 			)
