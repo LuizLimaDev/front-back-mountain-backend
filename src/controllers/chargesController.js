@@ -171,7 +171,7 @@ const deleteCharges = async (req, res) => {
 		const currentDate = new Date();
 		const dueDate = new Date(existingCharge.duedate);
 
-		if (dueDate >= currentDate) {
+		if (dueDate < currentDate) {
 			return res.status(400).json({
 				mensagem: "Esta cobrança não pode ser excluída!",
 			});
