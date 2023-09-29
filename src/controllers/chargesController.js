@@ -113,7 +113,10 @@ const listCharges = async (req, res) => {
 			.modify(function (queryBuilder) {
 				if (req.query.search) {
 					if (isNaN(Number(req.query.search))) {
-						queryBuilder.whereILike("customers.name",`%${req.query.search}%`);
+						queryBuilder.whereILike(
+							"customers.name",
+							`%${req.query.search}%`
+						);
 					} else {
 						queryBuilder.where("charges.id", req.query.search);
 					}
@@ -144,7 +147,7 @@ const listCharges = async (req, res) => {
 const updateCharges = async (req, res) => {
 	const { id } = req.params;
 
-	const { description, status, value, duedate } = req.body;
+	const { description, status, value, dueDate } = req.body;
 
 	try {
 		const charge = await knex("charges").where("id", id).first();
@@ -160,7 +163,7 @@ const updateCharges = async (req, res) => {
 				description,
 				status,
 				value,
-				duedate,
+				duedate: dueDate,
 			})
 			.where("id", id);
 
@@ -169,7 +172,7 @@ const updateCharges = async (req, res) => {
 			.json({ message: "Cobrança editada com sucesso!" });
 	} catch (error) {
 		console.log(error);
-		return res.status(500).json({message:"Server Internal Error"});
+		return res.status(500).json({ message: "Server Internal Error" });
 	}
 };
 
@@ -208,7 +211,7 @@ const deleteCharges = async (req, res) => {
 		return res.status(204).send();
 	} catch (error) {
 		console.log(error);
-		return res.status(500).json({ message: "Server Internal Error"});
+		return res.status(500).json({ message: "Server Internal Error" });
 	}
 };
 
