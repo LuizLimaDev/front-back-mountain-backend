@@ -8,7 +8,7 @@ const listCustomers = async (req, res) => {
 			.andWhere("status", "pendente")
 			.update({ status: "vencido" });
 
-		if(req.query.filter === "emDia"){
+		if (req.query.filter === "emDia") {
 			const customers = await knex("customers")
 				.distinct("customers.id", "customers.*", "status")
 				.leftJoin("charges", "customers.id", "=", function () {
@@ -27,24 +27,37 @@ const listCustomers = async (req, res) => {
 				.where((builder) => {
 					builder.whereIn("status", ["pago"]).orWhereNull("status");
 				})
-				.modify(function (queryBuilder){
-					if(req.query.search){
-						queryBuilder.whereILike("customers.name", `%${req.query.search}%`)
-							.orWhereILike("customers.cpf", `%${req.query.search}%`)
-							.orWhereILike("customers.email", `%${req.query.search}%`);
+				.modify(function (queryBuilder) {
+					if (req.query.search) {
+						queryBuilder
+							.whereILike(
+								"customers.name",
+								`%${req.query.search}%`
+							)
+							.orWhereILike(
+								"customers.cpf",
+								`%${req.query.search}%`
+							)
+							.orWhereILike(
+								"customers.email",
+								`%${req.query.search}%`
+							);
 					}
 				}) // filtro pelo nome, email e cpf
-				.modify(function (queryBuilder){
-					if(req.query.orderName){
+				.modify(function (queryBuilder) {
+					if (req.query.orderName) {
 						queryBuilder.orderBy("name", req.query.orderName);
 					}
 				}); // ordernação por nome
 			return res.json({ customers });
-		} else if(req.query.filter === "inadimplente") {
+		} else if (req.query.filter === "inadimplente") {
 			const customers = await knex("customers")
 				.modify(function (queryBuilder) {
 					if (process.env.NODE_ENV === "production") {
-						queryBuilder.distinctOn("customers.id", "customers.name");
+						queryBuilder.distinctOn(
+							"customers.id",
+							"customers.name"
+						);
 					} else {
 						queryBuilder.groupBy("customers.id");
 					}
@@ -52,19 +65,29 @@ const listCustomers = async (req, res) => {
 				.select("customers.*", "charges.status")
 				.leftJoin("charges", "customers.id", "=", "charges.customerid")
 				.whereIn("status", ["pendente", "vencido"])
-				.modify(function (queryBuilder){
-					if(req.query.search){
-						queryBuilder.whereILike("customers.name", `%${req.query.search}%`)
-							.orWhereILike("customers.cpf", `%${req.query.search}%`)
-							.orWhereILike("customers.email", `%${req.query.search}%`);
+				.modify(function (queryBuilder) {
+					if (req.query.search) {
+						queryBuilder
+							.whereILike(
+								"customers.name",
+								`%${req.query.search}%`
+							)
+							.orWhereILike(
+								"customers.cpf",
+								`%${req.query.search}%`
+							)
+							.orWhereILike(
+								"customers.email",
+								`%${req.query.search}%`
+							);
 					}
 				}) // filtro pelo nome, email e cpf
-				.modify(function (queryBuilder){
-					if(req.query.orderName){
+				.modify(function (queryBuilder) {
+					if (req.query.orderName) {
 						queryBuilder.orderBy("name", req.query.orderName);
 					}
 				}); // ordernação por nome
-			return res.status(200).json({customers});
+			return res.status(200).json({ customers });
 		}
 
 		const customers = await knex("customers")
@@ -86,11 +109,15 @@ const listCustomers = async (req, res) => {
 			.where((builder) => {
 				builder.whereIn("status", ["pago"]).orWhereNull("status");
 			})
-			.modify(function (queryBuilder){
-				if(req.query.search){
-					queryBuilder.whereILike("customers.name", `%${req.query.search}%`)
+			.modify(function (queryBuilder) {
+				if (req.query.search) {
+					queryBuilder
+						.whereILike("customers.name", `%${req.query.search}%`)
 						.orWhereILike("customers.cpf", `%${req.query.search}%`)
-						.orWhereILike("customers.email", `%${req.query.search}%`);
+						.orWhereILike(
+							"customers.email",
+							`%${req.query.search}%`
+						);
 				}
 			}) // filtro pelo nome, email e cpf
 			.union(
@@ -103,24 +130,38 @@ const listCustomers = async (req, res) => {
 						}
 					})
 					.select("customers.*", "charges.status")
-					.leftJoin("charges", "customers.id", "=", "charges.customerid")
+					.leftJoin(
+						"charges",
+						"customers.id",
+						"=",
+						"charges.customerid"
+					)
 					.whereIn("status", ["pendente", "vencido"])
-					.modify(function (queryBuilder){
-						if(req.query.search){
-							queryBuilder.whereILike("customers.name", `%${req.query.search}%`)
-								.orWhereILike("customers.cpf", `%${req.query.search}%`)
-								.orWhereILike("customers.email", `%${req.query.search}%`);
+					.modify(function (queryBuilder) {
+						if (req.query.search) {
+							queryBuilder
+								.whereILike(
+									"customers.name",
+									`%${req.query.search}%`
+								)
+								.orWhereILike(
+									"customers.cpf",
+									`%${req.query.search}%`
+								)
+								.orWhereILike(
+									"customers.email",
+									`%${req.query.search}%`
+								);
 						}
 					}) // filtro pelo nome, email e cpf
 			)
-			.modify(function (queryBuilder){
-				if(req.query.orderName){
+			.modify(function (queryBuilder) {
+				if (req.query.orderName) {
 					queryBuilder.orderBy("name", req.query.orderName);
 				}
 			}); // ordernação por nome
-			
-		return res.json({ customers });
 
+		return res.json({ customers });
 	} catch (error) {
 		return res.status(500).json({ mensagem: error.message });
 	}
@@ -152,7 +193,7 @@ const createCustomers = async (req, res) => {
 		if (emailExists) {
 			errors.push({
 				type: "email",
-				message: "O e-mail já existe."
+				message: "O e-mail já existe.",
 			});
 		}
 
@@ -161,7 +202,7 @@ const createCustomers = async (req, res) => {
 		if (cpfExists) {
 			errors.push({
 				type: "cpf",
-				message: "O cpf já existe."
+				message: "O cpf já existe.",
 			});
 		}
 
@@ -293,7 +334,10 @@ const detailCustomerCharges = async (req, res) => {
 	const { customerid } = req.params;
 
 	try {
-		const detailsCustomerCharges = await knex("charges").where("customerid", Number(customerid));
+		const detailsCustomerCharges = await knex("charges").where(
+			"customerid",
+			Number(customerid)
+		);
 
 		return res.status(200).json({ detailsCustomerCharges });
 	} catch (error) {
@@ -334,25 +378,29 @@ const updateCustomers = async (req, res) => {
 		if (emailAlreadyExists && emailAlreadyExists.id !== customer.id) {
 			errors.push({
 				type: "email",
-				message: "Uma conta com esse email ja existe"
+				message: "E-mail já cadastrado",
 			});
 		}
 
-		const cpfAlreadyExists = await knex("customers").where("cpf", cpf).first();
+		const cpfAlreadyExists = await knex("customers")
+			.where("cpf", cpf)
+			.first();
 
 		if (cpfAlreadyExists && cpfAlreadyExists.id !== customer.id) {
 			errors.push({
 				type: "cpf",
-				message: "CPF já existente!"
+				message: "CPF já cadastrado",
 			});
 		}
 
-		const phoneAlreadyExists = await knex("customers").where("phone", phone).first();
+		const phoneAlreadyExists = await knex("customers")
+			.where("phone", phone)
+			.first();
 
 		if (phoneAlreadyExists && phoneAlreadyExists.id !== customer.id) {
 			errors.push({
 				type: "phone",
-				message: "Uma conta com esse telefone ja existe"
+				message: "Uma conta com esse telefone já existe",
 			});
 		}
 

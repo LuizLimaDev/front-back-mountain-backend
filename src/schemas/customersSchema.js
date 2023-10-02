@@ -2,8 +2,8 @@ const joi = require("joi");
 
 const customersSchema = joi.object({
 	name: joi.string().min(3).required().messages({
-		"any.required": "O campo nome é obrigatório",
-		"string.empty": "O campo nome é obrigatório",
+		"any.required": "Este campo deve ser preenchido",
+		"string.empty": "Este campo deve ser preenchido",
 		"string.min": "O campo nome precisa ter no mínimo 3 caracteres",
 	}),
 
@@ -13,8 +13,8 @@ const customersSchema = joi.object({
 		.required()
 		.messages({
 			"string.email": "O campo email precisa ter um formato válido",
-			"any.required": "O campo email é obrigatório",
-			"string.empty": "O campo email é obrigatório",
+			"any.required": "Este campo deve ser preenchido",
+			"string.empty": "Este campo deve ser preenchido",
 		}),
 
 	cpf: joi
@@ -23,13 +23,13 @@ const customersSchema = joi.object({
 		.pattern(/^\d{3}.\d{3}.\d{3}-\d{2}$/)
 		.messages({
 			"string.pattern.base": "Formato: XXX.XXX.XXX-XX",
-			"any.required": "O campo cpf é obrigatório",
-			"string.empty": "O campo cpf é obrigatório",
+			"any.required": "Este campo deve ser preenchido",
+			"string.empty": "Este campo deve ser preenchido",
 		}),
 
 	phone: joi.string().required().messages({
-		"any.required": "O campo telefone é obrigatório",
-		"string.empty": "O campo telefone é obrigatório",
+		"any.required": "Este campo deve ser preenchido",
+		"string.empty": "Este campo deve ser preenchido",
 	}),
 
 	zipcode: joi.string().min(8).max(8).allow(null, "").messages({
