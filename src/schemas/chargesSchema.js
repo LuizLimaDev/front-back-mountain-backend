@@ -25,7 +25,7 @@ const chargesSchema = joi.object({
 		"any.only": "O campo status precisa ser do tipo pago ou pendente",
 	}),
 	value: joi.number().positive().required().messages({
-		"number.empty": "Este campo deve ser preenchido",
+		"number.base": "Deve ser um número válido. Ex: 20.5",
 		"any.required": "Este campo deve ser preenchido",
 		"number.positive": "O campo de valor precisar ser positivo",
 	}),
@@ -42,7 +42,7 @@ const updateChargesSchema = joi.object({
 		"any.only": "O campo status precisa ser do tipo pago ou pendente",
 	}),
 	value: joi.number().positive().required().messages({
-		"number.empty": "Este campo deve ser preenchido",
+		"number.base": "Deve ser um número válido. Ex: 20.5",
 		"any.required": "Este campo deve ser preenchido",
 		"number.positive": "O campo de valor precisar ser positivo",
 	}),
