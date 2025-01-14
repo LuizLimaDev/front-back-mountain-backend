@@ -12,7 +12,7 @@ module.exports = {
 			directory: __dirname + "/migrations",
 		},
 	},
-	production: {
+	test: {
 		client: "pg",
 		connection: {
 			connectionString: process.env.DATABASE_URL,
