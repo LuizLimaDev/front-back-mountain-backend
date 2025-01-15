@@ -11,7 +11,7 @@ const createUsers = async (req, res) => {
 
 		if (user) {
 			return res
-				.status(203)
+				.status(403)
 				.json({ message: "Ja existe um usuário com esse email" });
 		}
 
@@ -42,7 +42,7 @@ const sessionsUsers = async (req, res) => {
 				type: "email",
 				message: "Usuário não encontrado"
 			});
-			return res.status(400).json({
+			return res.status(404).json({
 				errors
 			});
 		}

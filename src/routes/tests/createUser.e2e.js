@@ -1,6 +1,6 @@
 const { expect, describe, it, beforeEach, afterAll } = require("@jest/globals");
 const request = require("supertest");
-const app = require("../app");
+const app = require("../../app");
 
 let server;
 let userData = {
@@ -9,7 +9,7 @@ let userData = {
 	password: "12345678"
 };
 
-describe("controller users E2E", () => {
+describe("controller create user E2E", () => {
 	beforeEach(()=>{
 		server = app.listen();
 	});
@@ -26,13 +26,17 @@ describe("controller users E2E", () => {
 	});
 
 	it("should return an error if a user with the same email already exists", async () => {
-		await request(app).post("/users").send(userData); 
+		await request(app).post("/users").send({
+			name: "test 2",
+			email: "duplicate@email.com",
+			password: "12345678"
+		}); 
 		const response = await request(app).post("/users").send({
 			name: "test 2",
-			email: "test@email.com",
+			email: "duplicate@email.com",
 			password: "12345678"
 		});
-		expect(response.status).toBe(400);
-		expect(response.body.message).toBe("Usuário criado com sucesso");
+		expect(response.status).toBe(403);
+		expect(response.body.message).toBe("Ja existe um usuário com esse email");
 	});
 });

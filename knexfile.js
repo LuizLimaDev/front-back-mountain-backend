@@ -18,11 +18,23 @@ module.exports = {
 			connectionString: process.env.DATABASE_URL,
 		},
 		useNullAsDefault: true,
+		migrations: {
+			directory: __dirname + "/migrations",
+			tableName: "migrations",
+		},
+	},
+	production: {
+		client: "pg",
+		connection: {
+			connectionString: process.env.DATABASE_URL,
+		},
+		useNullAsDefault: true,
+		migrations: {
+			directory: __dirname + "/migrations",
+			tableName: "migrations",
+		},
 		ssl: {
 			require: true,
 		},
-		migrations: {
-			directory: __dirname + "/migrations",
-		},
-	},
+	}
 };
