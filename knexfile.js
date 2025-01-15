@@ -1,6 +1,12 @@
 require("dotenv").config();
 const path = require("path");
 
+let schema = "public";
+if(process.env.DATABASE_URL){
+	const variableUrlSchema = new URL(process.env.DATABASE_URL).searchParams;
+	schema = variableUrlSchema.get("schema");
+}
+
 module.exports = {
 	development: {
 		client: "sqlite3",
@@ -10,7 +16,9 @@ module.exports = {
 		useNullAsDefault: true,
 		migrations: {
 			directory: __dirname + "/migrations",
+			schemaName: schema
 		},
+		searchPath: [schema]
 	},
 	test: {
 		client: "pg",
