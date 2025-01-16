@@ -102,7 +102,7 @@ const editUsers = async (req, res) => {
 		let user = await knex("users").where("id", id).first();
 
 		if (!user) {
-			return res.status(204).json({ message: "Usuário não encontrado" });
+			return res.status(404).json({ message: "Usuário não encontrado" });
 		}
 
 		const emailAlreadyExists = await knex("users")
@@ -148,7 +148,7 @@ const editUsers = async (req, res) => {
 			})
 			.where("id", id);
 
-		return res.status(204).json("ok");
+		return res.status(204).json({ message: "ok"});
 	} catch (error) {
 		console.log(error);
 		return res.status(500).json({ message: "Internal Server Error" });
