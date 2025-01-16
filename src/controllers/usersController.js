@@ -116,7 +116,10 @@ const editUsers = async (req, res) => {
 			});
 		}
 
-		const cpfAlreadyExists = await knex("users").where("cpf", cpf).first();
+		let cpfAlreadyExists = null;
+		if(cpf) {
+			cpfAlreadyExists = await knex("users").where("cpf", cpf).first();
+		}
 
 		if (cpf && cpfAlreadyExists && cpfAlreadyExists.id !== user.id) {
 			errors.push({
@@ -126,7 +129,7 @@ const editUsers = async (req, res) => {
 		}
 
 		if (errors.length > 0) {
-			return res.status(401).json({ errors });
+			return res.status(403).json({ errors });
 		}
 
 		user.name = name ?? user.name;

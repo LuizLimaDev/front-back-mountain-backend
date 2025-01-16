@@ -57,4 +57,69 @@ describe("controller user profile E2E", () => {
 		expect(response.status).toEqual(204);
 	});
 	
+	it("should be possible error if email already exist", async () => {
+		await request(app).post("/users").send({
+			name: "test 2",
+			email: "emailReadyEdit@email.com",
+			password: "12345678"
+		});
+		
+		await request(app).post("/users").send({
+			name: "test 2",
+			email: "tryEditEmail@email.com",
+			password: "12345678"
+		});
+		
+		const { body } = await  request(app).post("/users/sessions").send({
+			email: "tryEditEmail@email.com",
+			password: "12345678"
+		});
+
+		const response = await request(app).put("/users").set("Authorization", `Bearer ${body.token}`).send({
+			name: "new Test",
+			email: "emailReadyEdit@email.com",
+		});
+
+		expect(response.status).toEqual(403);
+		expect(response.body.errors[0].message).toEqual("Uma conta com esse email ja existe");	
+	});
+
+	it("should be possible error if cpf already exist", async () => {
+		await request(app).post("/users").send({
+			name: "test 2",
+			email: "cpfReadyEdit@email.com",
+			password: "12345678"
+		});
+		
+		await request(app).post("/users").send({
+			name: "test 2",
+			email: "tryEditCpf@email.com",
+			password: "12345678"
+		});
+		
+		const { body } = await  request(app).post("/users/sessions").send({
+			email: "tryEditCpf@email.com",
+			password: "12345678"
+		});
+
+		const { body: bodyAlready } = await  request(app).post("/users/sessions").send({
+			email: "cpfReadyEdit@email.com",
+			password: "12345678"
+		});
+
+		await request(app).put("/users").set("Authorization", `Bearer ${bodyAlready.token}`).send({
+			name: "new Test",
+			email: "cpfReadyEditNew@email.com",
+			cpf: "123.456.789-85"
+		});
+
+		const response = await request(app).put("/users").set("Authorization", `Bearer ${body.token}`).send({
+			name: "new Test",
+			email: "tryEditCpfNew@email.com",
+			cpf: "123.456.789-85",
+		});
+
+		expect(response.status).toEqual(403);
+		expect(response.body.errors[0].message).toEqual("CPF já existente!");	
+	});
 });
