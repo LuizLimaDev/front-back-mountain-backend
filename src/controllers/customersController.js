@@ -53,7 +53,7 @@ const listCustomers = async (req, res) => {
 		} else if (req.query.filter === "inadimplente") {
 			const customers = await knex("customers")
 				.modify(function (queryBuilder) {
-					if (process.env.NODE_ENV === "production") {
+					if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
 						queryBuilder.distinctOn(
 							"customers.id",
 							"customers.name"
@@ -92,7 +92,7 @@ const listCustomers = async (req, res) => {
 
 		const customers = await knex("customers")
 			.modify(function (queryBuilder) {
-				if (process.env.NODE_ENV === "production") {
+				if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
 					queryBuilder.distinctOn("customers.id");
 				} else {
 					queryBuilder.groupBy("customers.id");
@@ -123,7 +123,7 @@ const listCustomers = async (req, res) => {
 			.union(
 				knex("customers")
 					.modify(function (queryBuilder) {
-						if (process.env.NODE_ENV === "production") {
+						if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
 							queryBuilder.distinctOn("customers.id");
 						} else {
 							queryBuilder.groupBy("customers.id");
@@ -290,7 +290,7 @@ const listCustomersMetrics = async (req, res) => {
 
 		const listDefaulters = await knex("customers")
 			.modify(function (queryBuilder) {
-				if (process.env.NODE_ENV === "production") {
+				if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "test") {
 					queryBuilder.distinctOn("customers.id");
 				} else {
 					queryBuilder.groupBy("customers.id");
