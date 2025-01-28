@@ -124,7 +124,7 @@ const listCharges = async (req, res) => {
 				if (req.query.filter) {
 					queryBuilder.whereIn(
 						"charges.status",
-						JSON.parse(req.query.filter)
+						req.query.filter
 					);
 				}
 				if (req.query.orderName) {
