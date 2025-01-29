@@ -55,7 +55,7 @@ exports.seed = async function(knex) {
 			customerid: 1, 
 			description: "Description 1", 
 			value: 100.00, 
-			dueDate: "2028-01-01"
+			duedate: "2028-01-01"
 		},
 		{
 			id: 2,
@@ -64,7 +64,7 @@ exports.seed = async function(knex) {
 			customerid: 1,
 			description: "Description 2",
 			value: 200.00,
-			dueDate: "2028-01-02"
+			duedate: "2028-01-02"
 		},
 		{
 			id: 3,
@@ -73,7 +73,7 @@ exports.seed = async function(knex) {
 			customerid: 1,
 			description: "Description 3",
 			value: 300.00,
-			dueDate: "2028-01-03"
+			duedate: "2028-01-03"
 		},
 		{
 			id: 4,
@@ -82,7 +82,7 @@ exports.seed = async function(knex) {
 			customerid: 2,
 			description: "Description 4",
 			value: 400.00,
-			dueDate: "2025-01-04"
+			duedate: "2025-01-04"
 		},
 		{
 			id: 5,
@@ -91,7 +91,7 @@ exports.seed = async function(knex) {
 			customerid: 2,
 			description: "Description 5",
 			value: 500.00,
-			dueDate: "2025-01-05"
+			duedate: "2025-01-05"
 		},
 		{
 			id: 6,
@@ -100,7 +100,7 @@ exports.seed = async function(knex) {
 			customerid: 2,    
 			description: "Description 6",
 			value: 600.00,  
-			dueDate: "2025-01-06"
+			duedate: "2025-01-06"
 		},
 		{
 			id: 7,
@@ -109,7 +109,7 @@ exports.seed = async function(knex) {
 			customerid: 3,
 			description: "Description 7",
 			value: 700.00,
-			dueDate: "2022-01-07"
+			duedate: "2022-01-07"
 		},
 		{
 			id: 8,
@@ -118,7 +118,7 @@ exports.seed = async function(knex) {
 			customerid: 3,
 			description: "Description 8",
 			value: 800.00,
-			dueDate: "2022-01-08"
+			duedate: "2022-01-08"
 		},
 		{
 			id: 9,
@@ -127,7 +127,7 @@ exports.seed = async function(knex) {
 			customerid: 3,
 			description: "Description 9",
 			value: 900.00,
-			dueDate: "2022-01-09"
+			duedate: "2022-01-09"
 		}
     
 	]);
