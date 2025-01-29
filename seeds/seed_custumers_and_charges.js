@@ -8,7 +8,6 @@ exports.seed = async function(knex) {
 	await knex("customers").del();
 	await knex("customers").insert([
 		{
-			id: 1, 
 			name: "Customer 1", 
 			email: "customer1@email.com", 
 			cpf: "745.515.123-45", 
@@ -21,7 +20,6 @@ exports.seed = async function(knex) {
 			state: "Estado 1"
 		},
 		{
-			id: 2, 
 			name: "Customer 2", 
 			email: "customer2@email.com", 
 			cpf: "745.515.124-45", 
@@ -34,7 +32,6 @@ exports.seed = async function(knex) {
 			state: "Estado 2"
 		},
 		{
-			id: 3, 
 			name: "Customer 3", 
 			email: "customer3@email.com", 
 			cpf: "745.515.125-45", 
@@ -49,7 +46,6 @@ exports.seed = async function(knex) {
 	]);
 	await knex("charges").insert([
 		{
-			id: 1, 
 			name: "Charge 1", 
 			status: "pendente", 
 			customerid: 1, 
@@ -58,7 +54,6 @@ exports.seed = async function(knex) {
 			duedate: "2028-01-01"
 		},
 		{
-			id: 2,
 			name: "Charge 2",
 			status: "pendente",
 			customerid: 1,
@@ -67,7 +62,6 @@ exports.seed = async function(knex) {
 			duedate: "2028-01-02"
 		},
 		{
-			id: 3,
 			name: "Charge 3",
 			status: "pendente",
 			customerid: 1,
@@ -76,7 +70,6 @@ exports.seed = async function(knex) {
 			duedate: "2028-01-03"
 		},
 		{
-			id: 4,
 			name: "Charge 4",
 			status: "pago",
 			customerid: 2,
@@ -85,7 +78,6 @@ exports.seed = async function(knex) {
 			duedate: "2025-01-04"
 		},
 		{
-			id: 5,
 			name: "Charge 5",
 			status: "pago",
 			customerid: 2,
@@ -94,7 +86,6 @@ exports.seed = async function(knex) {
 			duedate: "2025-01-05"
 		},
 		{
-			id: 6,
 			name: "Charge 6",
 			status: "pago",
 			customerid: 2,    
@@ -103,7 +94,6 @@ exports.seed = async function(knex) {
 			duedate: "2025-01-06"
 		},
 		{
-			id: 7,
 			name: "Charge 7",
 			status: "pendente",
 			customerid: 3,
@@ -112,7 +102,6 @@ exports.seed = async function(knex) {
 			duedate: "2022-01-07"
 		},
 		{
-			id: 8,
 			name: "Charge 8",
 			status: "pendente",
 			customerid: 3,
@@ -121,7 +110,6 @@ exports.seed = async function(knex) {
 			duedate: "2022-01-08"
 		},
 		{
-			id: 9,
 			name: "Charge 9",
 			status: "pendente",
 			customerid: 3,
